@@ -1,0 +1,37 @@
+name: Oceanic Sentinel 自動更新排程
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # 每 30 分鐘執行一次
+  workflow_dispatch:      # 允許您手動點擊「Run workflow」立即更新
+
+permissions:
+  contents: write         # 賦予機器人寫入權限，這非常重要
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. 檢出程式碼
+        uses: actions/checkout@v3
+
+      - name: 2. 設定 Python 環境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 3. 安裝必要套件
+        run: |
+          pip install -r requirements.txt
+
+      - name: 4. 執行抓取腳本
+        run: python scraper.py
+
+      - name: 5. 將更新後的資料推回倉庫
+        run: |
+          git config --local user.name "GitHub Action Bot"
+          git config --local user.email "action@github.com"
+          git add data.json
+          # 如果資料沒有變動，commit 會報錯，這裡加上 || exit 0 來跳過
+          git commit -m "自動更新：魚情、船跡、匯率與油價數據 [$(date)]" || exit 0
+          git push
