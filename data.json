@@ -10,6 +10,11 @@
         "lat": -5.2,
         "lng": 55.4,
         "time": "03/12 10:28"
+      },
+      {
+        "lat": -5.2,
+        "lng": 55.4,
+        "time": "03/12 11:48"
       }
     ],
     "SHIN LONG 168": [
@@ -22,6 +27,11 @@
         "lat": -3.5,
         "lng": 60.1,
         "time": "03/12 10:28"
+      },
+      {
+        "lat": -3.5,
+        "lng": 60.1,
+        "time": "03/12 11:48"
       }
     ],
     "NF YUYO 1": [
@@ -34,6 +44,11 @@
         "lat": -1.2,
         "lng": 52.8,
         "time": "03/12 10:28"
+      },
+      {
+        "lat": -1.2,
+        "lng": 52.8,
+        "time": "03/12 11:48"
       }
     ],
     "NF YUYO 6": [
@@ -46,6 +61,11 @@
         "lat": -8.4,
         "lng": 58.2,
         "time": "03/12 10:28"
+      },
+      {
+        "lat": -8.4,
+        "lng": 58.2,
+        "time": "03/12 11:48"
       }
     ]
   },
@@ -64,7 +84,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 0.8834722,
       "lng": 0.41680554,
-      "temp": 29.6,
+      "temp": 29.7,
       "potential": "Medium",
       "date": null
     },
@@ -73,7 +93,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": -29.75,
       "lng": 154.25,
-      "temp": 27.5,
+      "temp": 27.4,
       "potential": "Medium",
       "date": "2001"
     },
@@ -127,7 +147,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 28.5,
       "lng": -77.68,
-      "temp": 23.9,
+      "temp": 23.8,
       "potential": "Medium",
       "date": "1997-04-20"
     },
@@ -154,7 +174,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": -1.7168056,
       "lng": 53.350136,
-      "temp": 28.5,
+      "temp": 28.6,
       "potential": "Medium",
       "date": null
     },
@@ -163,7 +183,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 3.4668057,
       "lng": -6.2668056,
-      "temp": 29.4,
+      "temp": 29.5,
       "potential": "Medium",
       "date": null
     },
@@ -172,8 +192,8 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 37.94808333,
       "lng": -24.79125,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 16.0,
+      "potential": "Medium",
       "date": "2011-06-27"
     },
     {
@@ -181,8 +201,8 @@
       "name": "大目鮪 (Bigeye)",
       "lat": -10.466805,
       "lng": 42.950138,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 29.6,
+      "potential": "Medium",
       "date": null
     },
     {
@@ -190,8 +210,8 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 46.5,
       "lng": -40.5,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 10.2,
+      "potential": "Medium",
       "date": "1997-08-01"
     },
     {
@@ -289,8 +309,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 39.83,
       "lng": -71.03,
-      "temp": 8.2,
-      "potential": "Medium",
+      "temp": null,
+      "potential": "Unknown",
       "date": "2001-12-15"
     },
     {
@@ -298,8 +318,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 26.25,
       "lng": -90.25,
-      "temp": 25.0,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": "1995-08-12"
     },
     {
@@ -307,8 +327,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 31,
       "lng": -79.11,
-      "temp": 25.6,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": "1999-11-06"
     },
     {
@@ -316,8 +336,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": 18.2,
-      "potential": "Medium",
+      "temp": null,
+      "potential": "Unknown",
       "date": "1989-11-24T12:00:00Z"
     },
     {
@@ -325,8 +345,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -9.82156666666669,
       "lng": 59.9557,
-      "temp": 29.4,
-      "potential": "Medium",
+      "temp": null,
+      "potential": "Unknown",
       "date": null
     },
     {
@@ -334,8 +354,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 9.950139,
       "lng": -18.033472,
-      "temp": 25.5,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": null
     },
     {
@@ -379,7 +399,7 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 35.41,
       "lng": -74.85,
-      "temp": 23.1,
+      "temp": 23.0,
       "potential": "High",
       "date": "2002-07-30"
     },
@@ -406,8 +426,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 18.5,
+      "potential": "Medium",
       "date": "1987-04-25T12:00:00Z"
     },
     {
@@ -415,8 +435,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
       "lng": 18.4972000122,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 21.0,
+      "potential": "High",
       "date": "1998-12-29T12:00:00Z"
     },
     {
@@ -424,8 +444,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
       "lng": 18.4972000122,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 21.0,
+      "potential": "High",
       "date": "2005-12-22T12:00:00Z"
     },
     {
@@ -433,8 +453,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 19,
       "lng": -47,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 24.9,
+      "potential": "Medium",
       "date": "1996-02-26"
     },
     {
@@ -442,8 +462,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -33.9028015137,
       "lng": 18.4349994659,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 20.0,
+      "potential": "High",
       "date": "2001-11-25T12:00:00Z"
     },
     {
@@ -451,8 +471,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 38.8833332062,
       "lng": -69.4333305359,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 10.7,
+      "potential": "Medium",
       "date": "1999-10-02T00:00:00Z"
     },
     {
@@ -523,8 +543,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -29.2493000031,
       "lng": 16.8686008453,
-      "temp": 17.3,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": "2003-04-18T12:00:00Z"
     },
     {
@@ -532,8 +552,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": 18.2,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": "2003-11-09T12:00:00Z"
     },
     {
@@ -541,8 +561,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -29.2493000031,
       "lng": 16.8686008453,
-      "temp": 17.3,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": "1987-02-01T12:00:00Z"
     },
     {
@@ -550,8 +570,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 39.98,
       "lng": -68.93,
-      "temp": 5.6,
-      "potential": "Medium",
+      "temp": null,
+      "potential": "Unknown",
       "date": "2000-08-21"
     },
     {
@@ -559,8 +579,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
       "lng": 18.4972000122,
-      "temp": 20.7,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": "2000-03-17T12:00:00Z"
     },
     {
@@ -640,5 +660,5 @@
     "JPY_TWD": 0.2002,
     "USD_TWD": 31.8
   },
-  "last_update": "2026-03-12 10:28:17"
+  "last_update": "2026-03-12 11:48:35"
 }
