@@ -45,6 +45,11 @@
         "lat": -5.2,
         "lng": 55.4,
         "time": "03/12 23:05"
+      },
+      {
+        "lat": -5.2,
+        "lng": 55.4,
+        "time": "03/13 00:02"
       }
     ],
     "SHIN LONG 168": [
@@ -92,6 +97,11 @@
         "lat": -3.5,
         "lng": 60.1,
         "time": "03/12 23:05"
+      },
+      {
+        "lat": -3.5,
+        "lng": 60.1,
+        "time": "03/13 00:02"
       }
     ],
     "NF YUYO 1": [
@@ -139,6 +149,11 @@
         "lat": -1.2,
         "lng": 52.8,
         "time": "03/12 23:05"
+      },
+      {
+        "lat": -1.2,
+        "lng": 52.8,
+        "time": "03/13 00:02"
       }
     ],
     "NF YUYO 6": [
@@ -186,6 +201,11 @@
         "lat": -8.4,
         "lng": 58.2,
         "time": "03/12 23:05"
+      },
+      {
+        "lat": -8.4,
+        "lng": 58.2,
+        "time": "03/13 00:02"
       }
     ]
   },
@@ -366,8 +386,8 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 6.300139,
       "lng": -22.60014,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 27.2,
+      "potential": "Medium",
       "date": null
     },
     {
@@ -375,8 +395,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -31.0387992859,
       "lng": 30.2322998047,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 25.0,
+      "potential": "High",
       "date": "2000-07-12T12:00:00Z"
     },
     {
@@ -384,8 +404,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 27.33,
       "lng": -89.28,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 26.6,
+      "potential": "High",
       "date": "1995-02-15"
     },
     {
@@ -393,8 +413,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 7.21806666666669,
       "lng": 59.6707666666669,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 28.6,
+      "potential": "Medium",
       "date": null
     },
     {
@@ -402,8 +422,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 25.6,
       "lng": -92,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 24.5,
+      "potential": "High",
       "date": "1996-03-25"
     },
     {
@@ -447,8 +467,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 31,
       "lng": -79.11,
-      "temp": 25.6,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": "1999-11-06"
     },
     {
@@ -456,8 +476,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": 17.8,
-      "potential": "Medium",
+      "temp": null,
+      "potential": "Unknown",
       "date": "1989-11-24T12:00:00Z"
     },
     {
@@ -465,8 +485,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -9.82156666666669,
       "lng": 59.9557,
-      "temp": 29.2,
-      "potential": "Medium",
+      "temp": null,
+      "potential": "Unknown",
       "date": null
     },
     {
@@ -474,8 +494,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 9.950139,
       "lng": -18.033472,
-      "temp": 24.6,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": null
     },
     {
@@ -483,8 +503,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 37.73,
       "lng": -74.15,
-      "temp": 8.9,
-      "potential": "Medium",
+      "temp": null,
+      "potential": "Unknown",
       "date": "1995-10-03"
     },
     {
@@ -492,8 +512,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 25.7833328247,
       "lng": -91.6000022888,
-      "temp": 23.9,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": "2001-10-31T00:00:00Z"
     },
     {
@@ -519,8 +539,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 35.41,
       "lng": -74.85,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 22.9,
+      "potential": "High",
       "date": "2002-07-30"
     },
     {
@@ -528,8 +548,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -1.6334722,
       "lng": -3.3668058,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 28.6,
+      "potential": "Medium",
       "date": null
     },
     {
@@ -537,8 +557,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 28.58,
       "lng": -78.51,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 24.0,
+      "potential": "High",
       "date": "2002-03-18"
     },
     {
@@ -546,8 +566,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 17.6,
+      "potential": "Medium",
       "date": "1987-04-25T12:00:00Z"
     },
     {
@@ -555,8 +575,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
       "lng": 18.4972000122,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 20.0,
+      "potential": "High",
       "date": "1998-12-29T12:00:00Z"
     },
     {
@@ -564,8 +584,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
       "lng": 18.4972000122,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 20.0,
+      "potential": "High",
       "date": "2005-12-22T12:00:00Z"
     },
     {
@@ -573,8 +593,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 19,
       "lng": -47,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 24.9,
+      "potential": "Medium",
       "date": "1996-02-26"
     },
     {
@@ -627,8 +647,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 40.28,
       "lng": -64.4,
-      "temp": 14.9,
-      "potential": "Medium",
+      "temp": null,
+      "potential": "Unknown",
       "date": "1995-08-10"
     },
     {
@@ -645,7 +665,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": 17.8,
+      "temp": 17.6,
       "potential": "High",
       "date": "1999-05-21T12:00:00Z"
     },
@@ -672,7 +692,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": 17.8,
+      "temp": 17.6,
       "potential": "High",
       "date": "2003-11-09T12:00:00Z"
     },
@@ -708,7 +728,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 34.1166667938,
       "lng": -75.5833320618,
-      "temp": 24.5,
+      "temp": 24.4,
       "potential": "Medium",
       "date": "2001-04-06T00:00:00Z"
     },
@@ -780,5 +800,5 @@
     "JPY_TWD": 0.2002,
     "USD_TWD": 31.8
   },
-  "last_update": "2026-03-12 23:05:34"
+  "last_update": "2026-03-13 00:02:15"
 }
