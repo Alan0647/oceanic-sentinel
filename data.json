@@ -185,6 +185,11 @@
         "lat": -5.2,
         "lng": 55.4,
         "time": "03/14 22:59"
+      },
+      {
+        "lat": -5.2,
+        "lng": 55.4,
+        "time": "03/14 23:57"
       }
     ],
     "SHIN LONG 168": [
@@ -372,6 +377,11 @@
         "lat": -3.5,
         "lng": 60.1,
         "time": "03/14 22:59"
+      },
+      {
+        "lat": -3.5,
+        "lng": 60.1,
+        "time": "03/14 23:57"
       }
     ],
     "NF YUYO 1": [
@@ -559,6 +569,11 @@
         "lat": -1.2,
         "lng": 52.8,
         "time": "03/14 22:59"
+      },
+      {
+        "lat": -1.2,
+        "lng": 52.8,
+        "time": "03/14 23:57"
       }
     ],
     "NF YUYO 6": [
@@ -746,6 +761,11 @@
         "lat": -8.4,
         "lng": 58.2,
         "time": "03/14 22:59"
+      },
+      {
+        "lat": -8.4,
+        "lng": 58.2,
+        "time": "03/14 23:57"
       }
     ]
   },
@@ -962,8 +982,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 25.6,
       "lng": -92,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 24.7,
+      "potential": "High",
       "date": "1996-03-25"
     },
     {
@@ -1016,7 +1036,7 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": 15.6,
+      "temp": 15.5,
       "potential": "Medium",
       "date": "1989-11-24T12:00:00Z"
     },
@@ -1070,8 +1090,8 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -13.550139,
       "lng": 45.050137,
-      "temp": 29.9,
-      "potential": "Medium",
+      "temp": null,
+      "potential": "Unknown",
       "date": null
     },
     {
@@ -1169,8 +1189,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
       "lng": 18.4972000122,
-      "temp": null,
-      "potential": "Unknown",
+      "temp": 18.5,
+      "potential": "High",
       "date": "1998-04-16T12:00:00Z"
     },
     {
@@ -1196,7 +1216,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -29.9335002899,
       "lng": 17.1173992157,
-      "temp": 14.9,
+      "temp": 14.8,
       "potential": "Medium",
       "date": "1987-10-21T12:00:00Z"
     },
@@ -1205,7 +1225,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": 15.6,
+      "temp": 15.5,
       "potential": "High",
       "date": "1999-05-21T12:00:00Z"
     },
@@ -1223,7 +1243,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -29.2493000031,
       "lng": 16.8686008453,
-      "temp": 16.4,
+      "temp": 16.3,
       "potential": "High",
       "date": "2003-04-18T12:00:00Z"
     },
@@ -1232,7 +1252,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.0527992249,
       "lng": 18.3549995422,
-      "temp": 15.6,
+      "temp": 15.5,
       "potential": "High",
       "date": "2003-11-09T12:00:00Z"
     },
@@ -1241,7 +1261,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -29.2493000031,
       "lng": 16.8686008453,
-      "temp": 16.4,
+      "temp": 16.3,
       "potential": "High",
       "date": "1987-02-01T12:00:00Z"
     },
@@ -1259,7 +1279,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
       "lng": 18.4972000122,
-      "temp": 18.6,
+      "temp": 18.5,
       "potential": "High",
       "date": "2000-03-17T12:00:00Z"
     },
@@ -1268,7 +1288,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 34.1166667938,
       "lng": -75.5833320618,
-      "temp": 23.7,
+      "temp": 23.6,
       "potential": "Medium",
       "date": "2001-04-06T00:00:00Z"
     },
@@ -1277,8 +1297,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 38.32696667,
       "lng": -29.5233,
-      "temp": 17.5,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": "2004-07-09"
     },
     {
@@ -1286,8 +1306,8 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -36.838433333333,
       "lng": 52.1509,
-      "temp": 20.5,
-      "potential": "High",
+      "temp": null,
+      "potential": "Unknown",
       "date": null
     }
   ],
@@ -1340,5 +1360,5 @@
     "JPY_TWD": 0.2011,
     "USD_TWD": 32.08
   },
-  "last_update": "2026-03-14 22:59:53"
+  "last_update": "2026-03-14 23:57:55"
 }
