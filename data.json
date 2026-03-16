@@ -260,6 +260,11 @@
         "lat": -5.2,
         "lng": 55.4,
         "time": "03/16 00:00"
+      },
+      {
+        "lat": -5.2,
+        "lng": 55.4,
+        "time": "03/16 06:08"
       }
     ],
     "SHIN LONG 168": [
@@ -522,6 +527,11 @@
         "lat": -3.5,
         "lng": 60.1,
         "time": "03/16 00:00"
+      },
+      {
+        "lat": -3.5,
+        "lng": 60.1,
+        "time": "03/16 06:08"
       }
     ],
     "NF YUYO 1": [
@@ -784,6 +794,11 @@
         "lat": -1.2,
         "lng": 52.8,
         "time": "03/16 00:00"
+      },
+      {
+        "lat": -1.2,
+        "lng": 52.8,
+        "time": "03/16 06:08"
       }
     ],
     "NF YUYO 6": [
@@ -1046,6 +1061,11 @@
         "lat": -8.4,
         "lng": 58.2,
         "time": "03/16 00:00"
+      },
+      {
+        "lat": -8.4,
+        "lng": 58.2,
+        "time": "03/16 06:08"
       }
     ]
   },
@@ -1055,7 +1075,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 18.333473,
       "lng": -20.166805,
-      "temp": 19.9,
+      "temp": 19.8,
       "potential": "High",
       "date": null
     },
@@ -1064,7 +1084,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 0.8834722,
       "lng": 0.41680554,
-      "temp": 29.6,
+      "temp": 29.4,
       "potential": "Medium",
       "date": null
     },
@@ -1082,7 +1102,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 42.6500015259,
       "lng": -52.125,
-      "temp": 7.9,
+      "temp": 7.8,
       "potential": "Medium",
       "date": "1992-11-08T00:00:00Z"
     },
@@ -1118,7 +1138,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 2.83333325386,
       "lng": -42.9249992371,
-      "temp": 27.3,
+      "temp": 27.2,
       "potential": "Medium",
       "date": "1997-02-25T00:00:00Z"
     },
@@ -1172,7 +1192,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": 37.94808333,
       "lng": -24.79125,
-      "temp": 16.1,
+      "temp": 16.0,
       "potential": "Medium",
       "date": "2011-06-27"
     },
@@ -1181,7 +1201,7 @@
       "name": "大目鮪 (Bigeye)",
       "lat": -10.466805,
       "lng": 42.950138,
-      "temp": 29.3,
+      "temp": 29.4,
       "potential": "Medium",
       "date": null
     },
@@ -1343,7 +1363,7 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 37.73,
       "lng": -74.15,
-      "temp": 9.1,
+      "temp": 8.9,
       "potential": "Medium",
       "date": "1995-10-03"
     },
@@ -1352,7 +1372,7 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 25.7833328247,
       "lng": -91.6000022888,
-      "temp": 23.9,
+      "temp": 23.8,
       "potential": "High",
       "date": "2001-10-31T00:00:00Z"
     },
@@ -1370,7 +1390,7 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -13.550139,
       "lng": 45.050137,
-      "temp": 30.0,
+      "temp": 29.9,
       "potential": "Medium",
       "date": null
     },
@@ -1379,7 +1399,7 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 35.41,
       "lng": -74.85,
-      "temp": 23.1,
+      "temp": 23.2,
       "potential": "High",
       "date": "2002-07-30"
     },
@@ -1388,7 +1408,7 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -1.6334722,
       "lng": -3.3668058,
-      "temp": 28.9,
+      "temp": 28.7,
       "potential": "Medium",
       "date": null
     },
@@ -1397,7 +1417,7 @@
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 28.58,
       "lng": -78.51,
-      "temp": 24.6,
+      "temp": 24.5,
       "potential": "High",
       "date": "2002-03-18"
     },
@@ -1442,7 +1462,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": -33.9028015137,
       "lng": 18.4349994659,
-      "temp": 17.9,
+      "temp": 17.6,
       "potential": "High",
       "date": "2001-11-25T12:00:00Z"
     },
@@ -1451,7 +1471,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 38.8833332062,
       "lng": -69.4333305359,
-      "temp": 11.9,
+      "temp": 11.8,
       "potential": "Medium",
       "date": "1999-10-02T00:00:00Z"
     },
@@ -1577,7 +1597,7 @@
       "name": "長鰭鮪 (Albacore)",
       "lat": 38.32696667,
       "lng": -29.5233,
-      "temp": 17.6,
+      "temp": 17.5,
       "potential": "High",
       "date": "2004-07-09"
     },
@@ -1636,9 +1656,9 @@
     }
   ],
   "finance": {
-    "USD_JPY": 159.5,
-    "JPY_TWD": 0.2009,
-    "USD_TWD": 32.04
+    "USD_JPY": 159.56,
+    "JPY_TWD": 0.2013,
+    "USD_TWD": 32.11
   },
-  "last_update": "2026-03-16 00:00:31"
+  "last_update": "2026-03-16 06:08:14"
 }
