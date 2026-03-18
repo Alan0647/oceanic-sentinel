@@ -80,6 +80,24 @@
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; CARTO'
         }).addTo(map);
+        // 新增一個保險箱，用來存放所有船隻的 Marker
+        var vesselMarkers = {}; 
+
+        // 定義「聚焦船隻」的函數
+        function focusVessel(name) {
+            var marker = vesselMarkers[name];
+            if (marker) {
+                // 1. 將地圖中心移到該船位置，並放大縮放層級到 7
+                map.setView(marker.getLatLng(), 7, { animate: true });
+                // 2. 自動彈出詳細資料視窗
+                marker.openPopup();
+        
+                // 3. 如果是手機版，點擊後自動收合面板
+                if (window.innerWidth <= 768) {
+                    document.getElementById('statsPanel').classList.remove('active');
+                }
+            }
+        }
 
         var vesselLayer = L.layerGroup().addTo(map);
         var tunaLayer = L.layerGroup().addTo(map);
