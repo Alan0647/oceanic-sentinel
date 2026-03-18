@@ -45,25 +45,45 @@ def get_finance_data():
     except: return None
 
 def fetch_real_vessel_positions():
-    """從 GFW 抓取真實船位"""
-    if not GFW_TOKEN:
-        print("未偵測到 GFW_TOKEN，切換為模擬模式。")
-        return [{"name": f["name"], "lat": -5.0, "lng": 55.0, "status": "模擬數據"} for f in MY_FLEET_CONFIG]
+    """從 GFW 抓取真實船位，並加入詳細診斷紀錄"""
+    if not GFW_TOKEN or GFW_TOKEN == "YOUR_TOKEN_HERE":
+        print("❌ 錯誤：找不到 GFW_TOKEN。請檢查 GitHub Secrets 設定。")
+        return [{"name": f["name"], "lat": -5.0, "lng": 55.0, "status": "Token缺失-模擬數據"} for f in MY_FLEET_CONFIG]
     
     headers = {'Authorization': f'Bearer {GFW_TOKEN}'}
     real_data = []
+    
     for ship in MY_FLEET_CONFIG:
         try:
-            # 搜尋船隻 ID
-            search = requests.get(f"https://gateway.globalfishingwatch.org/v2/vessels/search?query={ship['name']}", headers=headers).json()
-            if search.get('entries'):
+            # 嘗試搜尋船隻
+            search_url = f"https://gateway.globalfishingwatch.org/v2/vessels/search?query={ship['name']}"
+            search_res = requests.get(search_url, headers=headers)
+            
+            if search_res.status_code == 401:
+                print("❌ 錯誤：Token 失效或無權限 (401)。請重新申請 Token。")
+                return [{"name": ship['name'], "lat": 0, "lng": 0, "status": "Token失效"}]
+
+            search = search_res.json()
+            if search.get('entries') and len(search['entries']) > 0:
                 v_id = search['entries'][0]['id']
-                # 獲取最後位置
-                pos = requests.get(f"https://gateway.globalfishingwatch.org/v2/vessels/{v_id}/last-position", headers=headers).json()
-                real_data.append({"name": ship['name'], "lat": pos['lat'], "lng": pos['lon'], "status": "真實更新"})
+                pos_url = f"https://gateway.globalfishingwatch.org/v2/vessels/{v_id}/last-position"
+                pos = requests.get(pos_url, headers=headers).json()
+                
+                real_data.append({
+                    "name": ship['name'],
+                    "lat": pos['lat'],
+                    "lng": pos['lon'],
+                    "status": "真實更新"
+                })
+                print(f"✅ 成功抓取：{ship['name']}")
+            else:
+                # 如果搜尋不到，回傳一個特殊狀態，方便我們在地圖上看到
+                print(f"⚠️ 搜尋不到船隻：{ship['name']}，請確認名稱是否與 AIS 登記一致。")
+                real_data.append({"name": ship['name'], "lat": -2.0, "lng": 60.0, "status": "搜尋不到AIS"})
         except Exception as e:
-            print(f"船隻 {ship['name']} 抓取失敗: {e}")
+            print(f"❌ 抓取異常：{e}")
             continue
+            
     return real_data
 
 def fetch_tuna_data():
