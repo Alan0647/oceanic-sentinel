@@ -25,4 +25,17 @@ jobs:
           # 只需這兩個您已建立好的 Secret
           OFDC_USER: ${{ secrets.OFDC_USER }}
           OFDC_PASS: ${{ secrets.OFDC_PASS }}
+        - name: Run Scraper
+        env:
+          OFDC_USER: ${{ secrets.OFDC_USER }}
+          OFDC_PASS: ${{ secrets.OFDC_PASS }}
+        run: python tracker.py
+
+      - name: Commit and Push Data
+        run: |
+          git config --global user.name "Vessel-Bot"
+          git config --global user.email "bot@example.com"
+          git add data.json
+          git commit -m "Update vessel data: $(date)" || echo "No changes to commit"
+          git push
         run: python tracker.py
