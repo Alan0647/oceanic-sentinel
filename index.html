@@ -104,50 +104,87 @@
         var portLayer = L.layerGroup().addTo(map);
 
         // 讀取資料與錯誤診斷
-        fetch('data.json')
-            .then(res => {
-                if (!res.ok) throw new Error('找不到數據檔案 (data.json)。請確保 Actions 已成功執行。');
-                return res.json();
-            })
-            .then(data => {
-                document.getElementById('update-time').innerText = `最後同步：${data.last_update}`;
-                if (data.finance) {
-                    document.getElementById('usd-jpy').innerText = data.finance.USD_JPY.toFixed(2);
-    // 強制 JPY/TWD 顯示四位小數
-                    document.getElementById('jpy-twd').innerText = parseFloat(data.finance.JPY_TWD).toFixed(4);
-                    document.getElementById('usd-twd').innerText = data.finance.USD_TWD.toFixed(2);
-                }
+// 1. 先在 fetch 外部定義「標記保險箱」與「聚焦函數」
+var vesselMarkers = {}; 
 
-                data.tuna.forEach(p => {
-                    let color = p.name.includes('大目') ? '#8b5cf6' : (p.name.includes('黃鰭') ? '#eab308' : '#22c55e');
-                    L.circleMarker([p.lat, p.lng], {
-                        radius: 5, fillColor: color, color: '#fff', weight: 1, fillOpacity: 0.7
-                    }).addTo(tunaLayer).bindPopup(`<b>${p.name}</b><br>水溫: ${p.temp}°C<br>潛力: ${p.potential}`);
-                });
+function focusVessel(name) {
+    var marker = vesselMarkers[name];
+    if (marker) {
+        map.setView(marker.getLatLng(), 8, { animate: true });
+        marker.openPopup();
+        // 手機版點擊後收合面板
+        if (window.innerWidth <= 768) {
+            document.getElementById('statsPanel').classList.remove('active');
+        }
+    }
+}
 
-                data.ports.forEach(p => {
-                    L.marker([p.lat, p.lng], {
-                        icon: L.divIcon({ className: 'port-label', html: `⚓ ${p.mgo}`, iconSize: [50, 20] })
-                    }).addTo(portLayer).bindPopup(`<b>${p.name}</b><br>MGO: USD ${p.mgo} ${p.trend}`);
-                });
+// 2. 讀取資料並渲染地圖
+fetch('data.json')
+    .then(res => {
+        if (!res.ok) throw new Error('找不到數據檔案 (data.json)。');
+        return res.json();
+    })
+    .then(data => {
+        // 更新同步時間
+        document.getElementById('update-time').innerText = `最後同步：${data.last_update}`;
+        
+        // 更新匯率 (精確到小數點)
+        if (data.finance) {
+            document.getElementById('usd-jpy').innerText = data.finance.USD_JPY.toFixed(2);
+            document.getElementById('jpy-twd').innerText = parseFloat(data.finance.JPY_TWD).toFixed(4);
+            document.getElementById('usd-twd').innerText = data.finance.USD_TWD.toFixed(2);
+        }
 
-                let statsHtml = "";
-                for (let sName in data.vessels) {
-                    let history = data.vessels[sName];
-                    let path = history.map(h => [h.lat, h.lng]);
-                    L.polyline(path, { color: '#38bdf8', weight: 2, opacity: 0.6, dashArray: '5, 8' }).addTo(vesselLayer);
-                    let last = history[history.length - 1];
-                    L.circleMarker([last.lat, last.lng], {
-                        radius: 8, fillColor: '#ef4444', color: '#fff', weight: 2, fillOpacity: 1
-                    }).addTo(vesselLayer).bindPopup(`<b>${sName}</b><br>時間: ${last.time}`);
-                    statsHtml += `<div><b>${sName}</b>: 穩定作業中</div>`;
-                }
-                document.getElementById('fleet-stats').innerHTML = statsHtml;
-            })
-            .catch(err => {
-                console.error(err);
-                alert("⚠️ 系統提示：\n" + err.message);
-            });
+        // --- 處理鮪魚與港口 (維持原樣) ---
+        data.tuna.forEach(p => {
+            let color = p.name.includes('大目') ? '#8b5cf6' : (p.name.includes('黃鰭') ? '#eab308' : '#22c55e');
+            L.circleMarker([p.lat, p.lng], { radius: 5, fillColor: color, color: '#fff', weight: 1, fillOpacity: 0.7 })
+             .addTo(tunaLayer).bindPopup(`<b>${p.name}</b><br>水溫: ${p.temp}°C`);
+        });
+
+        data.ports.forEach(p => {
+            L.marker([p.lat, p.lng], { icon: L.divIcon({ className: 'port-label', html: `⚓ ${p.mgo}`, iconSize: [50, 20] }) })
+             .addTo(portLayer).bindPopup(`<b>${p.name}</b><br>MGO: USD ${p.mgo}`);
+        });
+
+        // --- 重點：處理船跡與「可點擊清單」 ---
+        let statsHtml = "";
+        for (let sName in data.vessels) {
+            let history = data.vessels[sName];
+            let last = history[history.length - 1];
+            let path = history.map(h => [h.lat, h.lng]);
+
+            // A. 畫出航跡線
+            L.polyline(path, { color: '#38bdf8', weight: 2, opacity: 0.6, dashArray: '5, 8' }).addTo(vesselLayer);
+
+            // B. 建立船隻 Marker 並存入保險箱
+            let marker = L.circleMarker([last.lat, last.lng], {
+                radius: 8, fillColor: '#ef4444', color: '#fff', weight: 2, fillOpacity: 1
+            }).addTo(vesselLayer);
+
+            marker.bindPopup(`
+                <div style="color:#1e293b; min-width:150px;">
+                    <b style="font-size:14px;">🚢 ${sName}</b><hr style="margin:5px 0; border:0; border-top:1px solid #eee;">
+                    狀態：<span style="color:#059669;">${last.status || '作業中'}</span><br>
+                    時間：${last.time}<br>
+                    座標：${last.lat.toFixed(2)}, ${last.lng.toFixed(2)}
+                </div>
+            `);
+
+            vesselMarkers[sName] = marker; // 存入保險箱
+
+            // C. 生成左下角「可點擊」的清單 HTML
+            statsHtml += `
+                <div onclick="focusVessel('${sName}')" 
+                     style="cursor:pointer; padding:10px 0; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:bold;">🚢 ${sName}</span>
+                    <span style="font-size:10px; color:#94a3b8;">定位 ❯</span>
+                </div>`;
+        }
+        document.getElementById('fleet-stats').innerHTML = statsHtml;
+    })
+    .catch(err => alert("系統提示：" + err.message));
 
         if (window.innerWidth <= 768) {
             const btn = document.createElement('div');
