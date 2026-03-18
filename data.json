@@ -1278,344 +1278,299 @@
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 18.333473,
-      "lng": -20.166805,
-      "date": null
+      "lng": -20.166805
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 0.8834722,
-      "lng": 0.41680554,
-      "date": null
+      "lng": 0.41680554
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": -29.75,
-      "lng": 154.25,
-      "date": "2001"
+      "lng": 154.25
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 42.6500015259,
-      "lng": -52.125,
-      "date": "1992-11-08T00:00:00Z"
+      "lng": -52.125
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 18.6000003815,
-      "lng": -53.9916667938,
-      "date": "1996-02-08T00:00:00Z"
+      "lng": -53.9916667938
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 6.75,
-      "lng": -39.2583332062,
-      "date": "1999-03-03T00:00:00Z"
+      "lng": -39.2583332062
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 2.350139,
-      "lng": 51.133472,
-      "date": null
+      "lng": 51.133472
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 2.83333325386,
-      "lng": -42.9249992371,
-      "date": "1997-02-25T00:00:00Z"
+      "lng": -42.9249992371
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 28.5,
-      "lng": -77.68,
-      "date": "1997-04-20"
+      "lng": -77.68
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 15.01,
-      "lng": -50.6,
-      "date": "1995-04-23"
+      "lng": -50.6
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 28.61,
-      "lng": -77.91,
-      "date": "1997-11-05"
+      "lng": -77.91
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": -1.7168056,
-      "lng": 53.350136,
-      "date": null
+      "lng": 53.350136
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 3.4668057,
-      "lng": -6.2668056,
-      "date": null
+      "lng": -6.2668056
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": 37.94808333,
-      "lng": -24.79125,
-      "date": "2011-06-27"
+      "lng": -24.79125
     },
     {
       "type": "tuna",
       "name": "大目鮪 (Bigeye)",
       "lat": -10.466805,
-      "lng": 42.950138,
-      "date": null
+      "lng": 42.950138
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -31.0387992859,
-      "lng": 30.2322998047,
-      "date": "2000-07-12T12:00:00Z"
+      "lng": 30.2322998047
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 27.33,
-      "lng": -89.28,
-      "date": "1995-02-15"
+      "lng": -89.28
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 7.21806666666669,
-      "lng": 59.6707666666669,
-      "date": null
+      "lng": 59.6707666666669
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 25.6,
-      "lng": -92,
-      "date": "1996-03-25"
+      "lng": -92
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -3.500139,
-      "lng": 69.55014,
-      "date": null
+      "lng": 69.55014
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 38,
-      "lng": -73,
-      "date": "2001-09-13"
+      "lng": -73
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 39.83,
-      "lng": -71.03,
-      "date": "2001-12-15"
+      "lng": -71.03
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 26.25,
-      "lng": -90.25,
-      "date": "1995-08-12"
+      "lng": -90.25
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 31,
-      "lng": -79.11,
-      "date": "1999-11-06"
+      "lng": -79.11
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -34.0527992249,
-      "lng": 18.3549995422,
-      "date": "1989-11-24T12:00:00Z"
+      "lng": 18.3549995422
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -9.82156666666669,
-      "lng": 59.9557,
-      "date": null
+      "lng": 59.9557
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 9.950139,
-      "lng": -18.033472,
-      "date": null
+      "lng": -18.033472
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 37.73,
-      "lng": -74.15,
-      "date": "1995-10-03"
+      "lng": -74.15
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": 25.7833328247,
-      "lng": -91.6000022888,
-      "date": "2001-10-31T00:00:00Z"
+      "lng": -91.6000022888
     },
     {
       "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -5.033472,
-      "lng": 42.18347,
-      "date": null
+      "lng": 42.18347
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
-      "lng": 18.4972000122,
-      "date": "1998-12-29T12:00:00Z"
+      "lng": 18.4972000122
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
-      "lng": 18.4972000122,
-      "date": "2005-12-22T12:00:00Z"
+      "lng": 18.4972000122
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": 19,
-      "lng": -47,
-      "date": "1996-02-26"
+      "lng": -47
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -33.9028015137,
-      "lng": 18.4349994659,
-      "date": "2001-11-25T12:00:00Z"
+      "lng": 18.4349994659
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": 38.8833332062,
-      "lng": -69.4333305359,
-      "date": "1999-10-02T00:00:00Z"
+      "lng": -69.4333305359
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -28.75,
-      "lng": 157.25,
-      "date": "2001"
+      "lng": 157.25
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
-      "lng": 18.4972000122,
-      "date": "1998-04-16T12:00:00Z"
+      "lng": 18.4972000122
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": 40,
-      "lng": -68,
-      "date": "1995-10-02"
+      "lng": -68
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": 40.28,
-      "lng": -64.4,
-      "date": "1995-08-10"
+      "lng": -64.4
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -29.9335002899,
-      "lng": 17.1173992157,
-      "date": "1987-10-21T12:00:00Z"
+      "lng": 17.1173992157
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.0527992249,
-      "lng": 18.3549995422,
-      "date": "1999-05-21T12:00:00Z"
+      "lng": 18.3549995422
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": 20.25,
-      "lng": -73.61,
-      "date": "1998-03-11"
+      "lng": -73.61
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -29.2493000031,
-      "lng": 16.8686008453,
-      "date": "2003-04-18T12:00:00Z"
+      "lng": 16.8686008453
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.0527992249,
-      "lng": 18.3549995422,
-      "date": "2003-11-09T12:00:00Z"
+      "lng": 18.3549995422
     },
     {
       "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -29.2493000031,
-      "lng": 16.8686008453,
-      "date": "1987-02-01T12:00:00Z"
+      "lng": 16.8686008453
     }
   ],
   "ports": [
     {
       "name": "高雄 (Kaohsiung)",
-      "lat": 22.6,
-      "lng": 120.3,
+      "lat": 22.61,
+      "lng": 120.29,
       "mgo": "745",
       "trend": "↓"
     },
     {
       "name": "釜山 (Busan)",
       "lat": 35.1,
-      "lng": 129.0,
+      "lng": 129.04,
       "mgo": "762",
       "trend": "↑"
     },
     {
       "name": "新加坡 (Singapore)",
-      "lat": 1.3,
-      "lng": 103.8,
+      "lat": 1.28,
+      "lng": 103.85,
       "mgo": "728",
       "trend": "→"
     },
     {
       "name": "拉斯帕爾馬斯 (Las Palmas)",
-      "lat": 28.1,
-      "lng": -15.4,
+      "lat": 28.12,
+      "lng": -15.43,
       "mgo": "815",
       "trend": "↓"
     }
@@ -1625,5 +1580,5 @@
     "JPY_TWD": 0.2006,
     "USD_TWD": 31.89
   },
-  "last_update": "2026-03-18 03:15:05"
+  "last_update": "2026-03-18 03:22:07"
 }
