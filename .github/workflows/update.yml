@@ -1,40 +1,37 @@
-name: Oceanic Sentinel 自動更新排程
+name: Oceanic Sentinel 自動抓取
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
-  workflow_dispatch:
-
-permissions:
-  contents: write
+    - cron: '0 * * * *'  # 每小時執行一次
+  workflow_dispatch:      # 允許手動執行
 
 jobs:
-  update-data:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. 檢出程式碼
-        uses: actions/checkout@v4
+      - name: 檢出代碼
+        uses: actions/checkout@v3
 
-      - name: 2. 設定 Python 環境
-        # --- 修正處：補上了 actions/ 前綴 ---
-        uses: actions/setup-python@v5
-        # ----------------------------------
+      - name: 設定 Python
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
-      - name: 3. 安裝必要套件
+      - name: 安裝依賴與瀏覽器
         run: |
-          pip install -r requirements.txt
+          pip install playwright requests
+          playwright install chromium
 
-      - name: 4. 執行抓取腳本
+      - name: 執行爬蟲
         env:
-          GFW_TOKEN: ${{ secrets.GFW_TOKEN }}
-        run: python scraper.py
+          OFDC_USER: ${{ secrets.OFDC_USER }}
+          OFDC_PASS: ${{ secrets.OFDC_PASS }}
+        run: python scraper_ofdc.py
 
-      - name: 5. 將更新後的資料推回倉庫
+      - name: 提交並推送更新
         run: |
-          git config --local user.name "GitHub Action Bot"
-          git config --local user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
           git add data.json
-          git commit -m "自動更新：魚情、船跡、匯率與油價數據 [$(date)]" || exit 0
+          git commit -m "自動更新 OFDC 漁獲數據 [$(date)]" || exit 0
           git push
