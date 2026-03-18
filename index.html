@@ -2,80 +2,254 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>海洋哨兵 - 昱友/信隆 艦隊監控系統</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海洋哨兵 Oceanic Sentinel | 昱友企業 艦隊監控</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: "Microsoft JhengHei", sans-serif; background: #f4f7f6; color: #333; margin: 20px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #004a99; border-bottom: 2px solid #004a99; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #004a99; color: white; }
-        tr:hover { background-color: #f1f1f1; }
-        .status-tag { padding: 4px 8px; border-radius: 4px; font-size: 12px; background: #28a745; color: white; }
-        .update-time { font-size: 14px; color: #666; text-align: right; margin-top: 10px; }
+        :root {
+            --primary-blue: #002b5e;
+            --secondary-blue: #004a99;
+            --accent-gold: #c5a059;
+            --bg-light: #f8f9fa;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 頂部導航欄 */
+        header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .header-title p {
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* 內容容器 */
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* 數據卡片區塊 */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border-top: 5px solid var(--accent-gold);
+        }
+
+        /* 表格樣式 */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+
+        th {
+            background-color: #f1f4f8;
+            color: var(--primary-blue);
+            font-weight: 700;
+            padding: 16px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #f8fbff;
+        }
+
+        /* 數據標籤樣式 */
+        .vessel-name {
+            font-weight: 700;
+            color: var(--secondary-blue);
+        }
+
+        .id-badge {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+
+        .weight-tag {
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .weight-tag::after {
+            content: " kg";
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #718096;
+        }
+
+        /* 狀態點點 */
+        .status-pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #48bb78;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 0 rgba(72, 187, 120, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(72, 187, 120, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(72, 187, 120, 0); }
+        }
+
+        /* 頁尾資訊 */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+
+        .last-update-box {
+            margin-top: 10px;
+            font-weight: 700;
+            color: var(--secondary-blue);
+        }
+
+        /* 行動裝置適應 */
+        @media (max-width: 600px) {
+            header { flex-direction: column; text-align: center; }
+            th, td { padding: 12px 8px; font-size: 0.9rem; }
+        }
     </style>
 </head>
 <body>
 
+<header>
+    <div class="header-title">
+        <h1>⚓ 海洋哨兵 Oceanic Sentinel</h1>
+        <p>昱友企業 | 信隆貿易 | 艦隊漁獲即時監控系統</p>
+    </div>
+</header>
+
 <div class="container">
-    <h1>⚓ 海洋哨兵 (Oceanic Sentinel)</h1>
-    <p>昱友企業 / 信隆貿易 - 遠洋漁船即時位標監控</p>
+    <div class="card">
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>船名 / ID</th>
+                        <th>資料日期</th>
+                        <th>最新座標 (Lat, Lon)</th>
+                        <th>漁獲量</th>
+                        <th>狀態</th>
+                    </tr>
+                </thead>
+                <tbody id="vessel-table-body">
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding: 40px;">
+                            系統數據連線中，請稍候...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>船名</th>
-                <th>船號 (ID)</th>
-                <th>資料日期</th>
-                <th>緯度 (Lat)</th>
-                <th>經度 (Lon)</th>
-                <th>漁獲量 (kg)</th>
-            </tr>
-        </thead>
-        <tbody id="vessel-table-body">
-            <tr><td colspan="6" style="text-align:center;">資料載入中...</td></tr>
-        </tbody>
-    </table>
-
-    <div id="last-update" class="update-time">等待更新...</div>
+    <div class="last-update-box" id="update-display"></div>
+    
+    <footer>
+        &copy; 2026 YUYO Enterprise & SHIN LONG Trading Co., Ltd. <br>
+        系統每 24 小時自動同步 OFDC 電子漁獲回報系統數據。
+    </footer>
 </div>
 
 <script>
-    // 這是關鍵的 JavaScript，用來讀取 data.json
-    async function loadVesselData() {
+    async function fetchVesselData() {
         try {
-            // 讀取同目錄下的 data.json (由 GitHub Actions 產生)
-            const response = await fetch('data.json?t=' + list_of_dates = new Date().getTime()); 
+            // 使用時間戳防止快取
+            const timestamp = new Date().getTime();
+            const response = await fetch(`data.json?t=${timestamp}`);
+            
+            if (!response.ok) throw new Error('無法取得 JSON 檔案');
+            
             const data = await response.json();
-
             const tableBody = document.getElementById('vessel-table-body');
-            tableBody.innerHTML = ''; // 清空載入中字樣
+            const updateDisplay = document.getElementById('update-display');
+
+            // 清空舊內容
+            tableBody.innerHTML = '';
 
             data.forEach(vessel => {
-                const row = `
-                    <tr>
-                        <td><strong>${vessel.name}</strong></td>
-                        <td>${vessel.id}</td>
-                        <td>${vessel.date}</td>
-                        <td>${vessel.lat}</td>
-                        <td>${vessel.lon}</td>
-                        <td><span class="status-tag">${vessel.weight}</span></td>
-                    </tr>
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <span class="vessel-name">${vessel.name}</span><br>
+                        <span class="id-badge">${vessel.id}</span>
+                    </td>
+                    <td>${vessel.date}</td>
+                    <td><code>${vessel.lat}, ${vessel.lon}</code></td>
+                    <td><span class="weight-tag">${vessel.weight}</span></td>
+                    <td><span class="status-pulse"></span>作業中</td>
                 `;
-                tableBody.innerHTML += row;
+                tableBody.appendChild(row);
             });
 
-            document.getElementById('last-update').innerText = "系統自動同步時間：" + data[0].update_time;
-            
+            // 顯示最後更新時間 (取第一艘船的 update_time)
+            if (data.length > 0) {
+                updateDisplay.innerText = `🔄 雲端同步完成：${data[0].update_time} (GMT+8)`;
+            }
+
         } catch (error) {
-            console.error("無法讀取漁獲資料:", error);
-            document.getElementById('vessel-table-body').innerHTML = 
-                '<tr><td colspan="6" style="text-align:center; color:red;">❌ 無法載入最新數據，請確認 GitHub Action 執行狀態。</td></tr>';
+            console.error('Fetch error:', error);
+            document.getElementById('vessel-table-body').innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align:center; padding: 40px; color: #e53e3e;">
+                        ❌ 數據加載失敗：請確認 data.json 是否已生成並推送到倉庫。
+                    </td>
+                </tr>
+            `;
         }
     }
 
-    // 網頁開啟後執行
-    loadVesselData();
+    // 網頁開啟即執行
+    fetchVesselData();
 </script>
 
 </body>
