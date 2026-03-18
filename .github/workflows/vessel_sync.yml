@@ -1,0 +1,23 @@
+name: Daily Vessel Sync
+on:
+  schedule:
+    - cron: '45 0 * * *' # 每天 UTC 00:45 (台灣 08:45)
+  workflow_dispatch: # 允許手動從 GitHub 介面觸發
+
+jobs:
+  run-tracker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install Dependencies
+        run: |
+          pip install gspread google-auth requests
+      - name: Run Scraper
+        env:
+          GS_CREDENTIALS: ${{ secrets.GS_CREDENTIALS }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+        run: python tracker.py
