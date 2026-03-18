@@ -1,8 +1,8 @@
 name: OFDC Data Auto Scraper
 on:
   schedule:
-    - cron: '45 0 * * *' # 台灣時間 08:45
-  workflow_dispatch:
+    - cron: '45 0 * * *' # 台灣時間 08:45 自動執行
+  workflow_dispatch:      # 允許您隨時手動點選執行
 
 jobs:
   scrape:
@@ -22,7 +22,7 @@ jobs:
 
       - name: Run Scraper
         env:
-          # 使用您建立的正確 Secret 名稱
+          # 只需這兩個您已建立好的 Secret
           OFDC_USER: ${{ secrets.OFDC_USER }}
           OFDC_PASS: ${{ secrets.OFDC_PASS }}
         run: python tracker.py
