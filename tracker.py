@@ -16,39 +16,70 @@ async def run_scraper():
     async with async_playwright() as p:
         # 啟動瀏覽器
         browser = await p.chromium.launch(headless=True)
-        context = await browser.new_context()
+        context = await browser.new_context(viewport={'width': 1280, 'height': 800})
         page = await context.new_page()
 
-        # 前往 OFDC 登入頁面 (請依實際網址調整，例如 efish.ofdc.org.tw)
         print("🔗 正在前往 OFDC 系統...")
         await page.goto("https://efish.ofdc.org.tw/vms/login") 
 
-        # 使用您指定的變數名稱進行登入
+        # 1. 執行登入 (使用您提供的精確 ID)
         try:
-            await page.fill('input[name="username"]', os.environ['OFDC_USER'])
-            await page.fill('input[name="password"]', os.environ['OFDC_PASS'])
-            await page.click('button[type="submit"]')
+            await page.fill('input[id="j_idt8:使用者名稱"]', os.environ['OFDC_USER'])
+            await page.fill('input[id="j_idt8:密碼"]', os.environ['OFDC_PASS'])
+            # 由於沒抓到按鈕 ID，直接按 Enter 鍵通常最保險
+            await page.keyboard.press("Enter")
             await page.wait_for_load_state("networkidle")
             print("✅ 登入成功")
         except Exception as e:
-            print(f"❌ 登入失敗，請檢查帳密或網頁結構: {e}")
+            print(f"❌ 登入階段出錯: {e}")
+            await browser.close()
             return
 
+        # 2. 開始巡迴抓取六艘船的數據
+        final_report = []
         for vessel in VESSELS:
             try:
-                # 這裡的搜尋邏輯需視 OFDC 介面而定
-                # 假設搜尋框 ID 為 #search_vessel
-                await page.fill('#search_vessel', vessel['id'])
-                await page.keyboard.press("Enter")
-                await page.wait_for_timeout(3000) # 等待 3 秒載入數據
-
-                # 擷取漁獲數據 (範例 Selector)
-                # 您可以提供正確的網頁元素位置，我可以幫您寫得更精準
-                catch_data = await page.inner_text('.vessel-catch-info')
+                print(f"🚢 正在切換至：{vessel['name']} ({vessel['id']})...")
                 
-                print(f"🚢 {vessel['name']} 數據攫取成功: {catch_data[:50]}...")
+                # 使用您提供的 Select ID 切換船隻
+                await page.select_option('select[id="toolForm:ctnoSelectMenu"]', vessel['id'])
+                
+                # 等待表格更新 (通常選單切換後網頁會跳轉或重新整理)
+                await page.wait_for_timeout(3000) 
+                
+                # 抓取第一列數據 (根據您提供的 <tr> 結構)
+                # 我們抓取該船隻最新一筆 (第一列) 的所有 <td>
+                cells = await page.query_selector_all('tr.ui-widget-content >> td')
+                
+                if len(cells) >= 12:
+                    # 根據您提供的 HTML 排序解析資料：
+                    # Index 2: 日期, Index 4: 緯度, Index 5: 經度, Index 11: 漁獲量(範例中是2560)
+                    date_val = await cells[2].inner_text()
+                    lat_val = await cells[4].inner_text()
+                    lon_val = await cells[5].inner_text()
+                    weight_val = await cells[11].inner_text()
+                    status_val = await cells[20].inner_text() # "作業"
+
+                    print(f"   📍 位置: {lat_val}, {lon_val} | 🐟 本次漁獲: {weight_val} kg | 📅 日期: {date_val}")
+                    
+                    final_report.append({
+                        "vessel": vessel['name'],
+                        "date": date_val,
+                        "lat": lat_val,
+                        "lon": lon_val,
+                        "weight": weight_val,
+                        "status": status_val
+                    })
+                else:
+                    print(f"   ⚠️ {vessel['name']} 查無近期數據列")
+
             except Exception as e:
-                print(f"⚠️ 無法取得 {vessel['name']} ({vessel['id']}) 的資料: {e}")
+                print(f"   ❌ 處理 {vessel['name']} 時發生錯誤: {e}")
+
+        # 3. 輸出最終結果 (目前先在 Log 顯示，之後可直接對接 Google Sheet)
+        print("\n--- 📊 今日漁獲與位標匯報 ---")
+        for r in final_report:
+            print(f"[{r['vessel']}] 日期:{r['date']} 座標:({r['lat']}, {r['lon']}) 漁獲:{r['weight']}kg 狀態:{r['status']}")
 
         await browser.close()
 
