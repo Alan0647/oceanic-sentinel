@@ -1381,41 +1381,6 @@
     },
     {
       "type": "tuna",
-      "name": "大目鮪 (Bigeye)",
-      "lat": 46.5,
-      "lng": -40.5,
-      "date": "1997-08-01"
-    },
-    {
-      "type": "tuna",
-      "name": "大目鮪 (Bigeye)",
-      "lat": 35.53,
-      "lng": -74.78,
-      "date": "2000-11-15"
-    },
-    {
-      "type": "tuna",
-      "name": "大目鮪 (Bigeye)",
-      "lat": 38,
-      "lng": -72,
-      "date": "1993-08-18"
-    },
-    {
-      "type": "tuna",
-      "name": "大目鮪 (Bigeye)",
-      "lat": 37.35,
-      "lng": -73.75,
-      "date": "2000-06-12"
-    },
-    {
-      "type": "tuna",
-      "name": "大目鮪 (Bigeye)",
-      "lat": 6.300139,
-      "lng": -22.60014,
-      "date": null
-    },
-    {
-      "type": "tuna",
       "name": "黃鰭鮪 (Yellowfin)",
       "lat": -31.0387992859,
       "lng": 30.2322998047,
@@ -1521,41 +1486,6 @@
     },
     {
       "type": "tuna",
-      "name": "黃鰭鮪 (Yellowfin)",
-      "lat": -13.550139,
-      "lng": 45.050137,
-      "date": null
-    },
-    {
-      "type": "tuna",
-      "name": "黃鰭鮪 (Yellowfin)",
-      "lat": 35.41,
-      "lng": -74.85,
-      "date": "2002-07-30"
-    },
-    {
-      "type": "tuna",
-      "name": "黃鰭鮪 (Yellowfin)",
-      "lat": -1.6334722,
-      "lng": -3.3668058,
-      "date": null
-    },
-    {
-      "type": "tuna",
-      "name": "黃鰭鮪 (Yellowfin)",
-      "lat": 28.58,
-      "lng": -78.51,
-      "date": "2002-03-18"
-    },
-    {
-      "type": "tuna",
-      "name": "黃鰭鮪 (Yellowfin)",
-      "lat": -34.0527992249,
-      "lng": 18.3549995422,
-      "date": "1987-04-25T12:00:00Z"
-    },
-    {
-      "type": "tuna",
       "name": "長鰭鮪 (Albacore)",
       "lat": -34.3568992615,
       "lng": 18.4972000122,
@@ -1658,41 +1588,6 @@
       "lat": -29.2493000031,
       "lng": 16.8686008453,
       "date": "1987-02-01T12:00:00Z"
-    },
-    {
-      "type": "tuna",
-      "name": "長鰭鮪 (Albacore)",
-      "lat": 39.98,
-      "lng": -68.93,
-      "date": "2000-08-21"
-    },
-    {
-      "type": "tuna",
-      "name": "長鰭鮪 (Albacore)",
-      "lat": -34.3568992615,
-      "lng": 18.4972000122,
-      "date": "2000-03-17T12:00:00Z"
-    },
-    {
-      "type": "tuna",
-      "name": "長鰭鮪 (Albacore)",
-      "lat": 34.1166667938,
-      "lng": -75.5833320618,
-      "date": "2001-04-06T00:00:00Z"
-    },
-    {
-      "type": "tuna",
-      "name": "長鰭鮪 (Albacore)",
-      "lat": 38.32696667,
-      "lng": -29.5233,
-      "date": "2004-07-09"
-    },
-    {
-      "type": "tuna",
-      "name": "長鰭鮪 (Albacore)",
-      "lat": -36.838433333333,
-      "lng": 52.1509,
-      "date": null
     }
   ],
   "ports": [
@@ -1730,5 +1625,5 @@
     "JPY_TWD": 0.2006,
     "USD_TWD": 31.89
   },
-  "last_update": "2026-03-18 02:31:09"
+  "last_update": "2026-03-18 03:09:37"
 }
