@@ -1,7 +1,8 @@
-import os, json, gspread, time
-from google.oauth2.service_account import Credentials
+import os
+import asyncio
+from playwright.async_api import async_playwright
 
-# 設定追蹤清單
+# 您的六艘核心船隻清單
 VESSELS = [
     {"name": "信隆168", "id": "61436"},
     {"name": "昱友668", "id": "61508"},
@@ -11,30 +12,45 @@ VESSELS = [
     {"name": "隆昌3", "id": "70554"}
 ]
 
-def get_vessel_data(vessel_id):
-    # 此處應插入特定網站的爬蟲邏輯 (範例為模擬數據)
-    # 建議針對 OPRT 或 AIS 系統進行 API 或 HTML 解析
-    return {
-        "lat": "22.627", "lon": "120.265", 
-        "time": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "status": "In Transit"
-    }
+async def run_scraper():
+    async with async_playwright() as p:
+        # 啟動瀏覽器
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
+        page = await context.new_page()
 
-def main():
-    # 認證 Google Sheets
-    scope = ['https://www.googleapis.com/auth/spreadsheets']
-    creds_dict = json.loads(os.environ['GS_CREDENTIALS'])
-    creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
-    client = gspread.authorize(creds)
-    
-    sheet = client.open_by_key(os.environ['SHEET_ID']).worksheet("Data")
-    
-    for vessel in VESSELS:
-        data = get_vessel_data(vessel['id'])
-        row = [time.strftime("%Y-%m-%d"), vessel['name'], vessel['id'], 
-               data['lat'], data['lon'], data['status'], "Auto-GitHub"]
-        sheet.append_row(row)
-        print(f"Updated {vessel['name']}")
+        # 前往 OFDC 登入頁面 (請依實際網址調整，例如 efish.ofdc.org.tw)
+        print("🔗 正在前往 OFDC 系統...")
+        await page.goto("https://efish.ofdc.org.tw/vms/login") 
+
+        # 使用您指定的變數名稱進行登入
+        try:
+            await page.fill('input[name="username"]', os.environ['OFDC_USER'])
+            await page.fill('input[name="password"]', os.environ['OFDC_PASS'])
+            await page.click('button[type="submit"]')
+            await page.wait_for_load_state("networkidle")
+            print("✅ 登入成功")
+        except Exception as e:
+            print(f"❌ 登入失敗，請檢查帳密或網頁結構: {e}")
+            return
+
+        for vessel in VESSELS:
+            try:
+                # 這裡的搜尋邏輯需視 OFDC 介面而定
+                # 假設搜尋框 ID 為 #search_vessel
+                await page.fill('#search_vessel', vessel['id'])
+                await page.keyboard.press("Enter")
+                await page.wait_for_timeout(3000) # 等待 3 秒載入數據
+
+                # 擷取漁獲數據 (範例 Selector)
+                # 您可以提供正確的網頁元素位置，我可以幫您寫得更精準
+                catch_data = await page.inner_text('.vessel-catch-info')
+                
+                print(f"🚢 {vessel['name']} 數據攫取成功: {catch_data[:50]}...")
+            except Exception as e:
+                print(f"⚠️ 無法取得 {vessel['name']} ({vessel['id']}) 的資料: {e}")
+
+        await browser.close()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run_scraper())
