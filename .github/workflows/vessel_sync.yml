@@ -1,23 +1,28 @@
-name: Daily Vessel Sync
+name: OFDC Data Auto Scraper
 on:
   schedule:
-    - cron: '45 0 * * *' # 每天 UTC 00:45 (台灣 08:45)
-  workflow_dispatch: # 允許手動從 GitHub 介面觸發
+    - cron: '45 0 * * *' # 台灣時間 08:45
+  workflow_dispatch:
 
 jobs:
-  run-tracker:
+  scrape:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Install Dependencies
+
+      - name: Install dependencies
         run: |
-          pip install gspread google-auth requests
+          pip install playwright
+          playwright install chromium
+
       - name: Run Scraper
         env:
-          GS_CREDENTIALS: ${{ secrets.GS_CREDENTIALS }}
-          SHEET_ID: ${{ secrets.SHEET_ID }}
+          # 使用您建立的正確 Secret 名稱
+          OFDC_USER: ${{ secrets.OFDC_USER }}
+          OFDC_PASS: ${{ secrets.OFDC_PASS }}
         run: python tracker.py
