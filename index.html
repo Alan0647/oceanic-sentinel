@@ -94,9 +94,10 @@
             .then(data => {
                 document.getElementById('update-time').innerText = `最後同步：${data.last_update}`;
                 if (data.finance) {
-                    document.getElementById('usd-jpy').innerText = data.finance.USD_JPY;
-                    document.getElementById('jpy-twd').innerText = data.finance.JPY_TWD;
-                    document.getElementById('usd-twd').innerText = data.finance.USD_TWD;
+                    document.getElementById('usd-jpy').innerText = data.finance.USD_JPY.toFixed(2);
+    // 強制 JPY/TWD 顯示四位小數
+                    document.getElementById('jpy-twd').innerText = parseFloat(data.finance.JPY_TWD).toFixed(4);
+                    document.getElementById('usd-twd').innerText = data.finance.USD_TWD.toFixed(2);
                 }
 
                 data.tuna.forEach(p => {
