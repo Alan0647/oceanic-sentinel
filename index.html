@@ -2,196 +2,81 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Oceanic Sentinel | 昱友企業全域監控中心</title>
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <title>海洋哨兵 - 昱友/信隆 艦隊監控系統</title>
     <style>
-        :root {
-            --bg-dark: rgba(15, 23, 42, 0.95);
-            --border-color: #334155;
-            --text-main: #f8fafc;
-            --accent-blue: #38bdf8;
-        }
-        body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica; background: #0b1621; }
-        #map { height: 100vh; width: 100%; z-index: 1; }
-        
-        /* 標題儀表板 */
-        .dashboard-overlay {
-            position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: var(--bg-dark); color: var(--text-main);
-            padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border-color);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-        }
-        /* 數據與匯率面板 */
-        .stats-panel {
-            position: absolute; bottom: 20px; left: 20px; z-index: 1000;
-            background: var(--bg-dark); color: var(--text-main);
-            width: 300px; padding: 15px; border-radius: 12px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-        .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .finance-item { background: rgba(30, 41, 59, 0.5); padding: 8px; border-radius: 6px; text-align: center; }
-        .finance-val { display: block; font-size: 16px; font-weight: bold; color: #fbbf24; }
-        .finance-label { font-size: 10px; color: #94a3b8; }
-
-        @media (max-width: 768px) {
-            .dashboard-overlay { top: 0; left: 0; width: 100%; border-radius: 0; border: none; box-sizing: border-box; }
-            .stats-panel { bottom: -400px; left: 0; width: 100%; border-radius: 20px 20px 0 0; box-sizing: border-box; }
-            .stats-panel.active { bottom: 0; }
-            .mobile-toggle {
-                display: block; position: absolute; bottom: 20px; right: 20px; z-index: 1001;
-                background: var(--accent-blue); color: white; width: 56px; height: 56px;
-                border-radius: 50%; text-align: center; line-height: 56px; font-size: 24px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            }
-        }
-        .port-label { background: #0ea5e9; color: white; border-radius: 4px; padding: 2px 5px; font-size: 11px; font-weight: bold; border: 1px solid white; white-space: nowrap; }
+        body { font-family: "Microsoft JhengHei", sans-serif; background: #f4f7f6; color: #333; margin: 20px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #004a99; border-bottom: 2px solid #004a99; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #004a99; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+        .status-tag { padding: 4px 8px; border-radius: 4px; font-size: 12px; background: #28a745; color: white; }
+        .update-time { font-size: 14px; color: #666; text-align: right; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-overlay">
-        <h2 style="margin:0; font-size:18px; letter-spacing:1px;">OCEANIC SENTINEL</h2>
-        <div style="font-size:11px; color:#94a3b8; margin-top:4px;" id="update-time">系統同步中...</div>
-    </div>
+<div class="container">
+    <h1>⚓ 海洋哨兵 (Oceanic Sentinel)</h1>
+    <p>昱友企業 / 信隆貿易 - 遠洋漁船即時位標監控</p>
 
-    <div class="stats-panel" id="statsPanel">
-        <div style="margin-bottom: 15px;">
-            <h4 style="margin:0 0 10px 0; color:var(--accent-blue);">💱 金融匯率</h4>
-            <div class="finance-grid">
-                <div class="finance-item"><span class="finance-label">USD / JPY</span><span class="finance-val" id="usd-jpy">--</span></div>
-                <div class="finance-item"><span class="finance-label">JPY / NTD</span><span class="finance-val" id="jpy-twd">--</span></div>
-                <div class="finance-item" style="grid-column: span 2;"><span class="finance-label">USD / NTD</span><span class="finance-val" id="usd-twd">--</span></div>
-            </div>
-        </div>
-        <hr style="border:0; border-top:1px solid var(--border-color); margin:15px 0;">
-        <h4 style="margin:0 0 10px 0; color:var(--accent-blue);">🚢 船隊效率統計</h4>
-        <div id="fleet-stats" style="font-size:12px; line-height:1.6;">載入數據中...</div>
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>船名</th>
+                <th>船號 (ID)</th>
+                <th>資料日期</th>
+                <th>緯度 (Lat)</th>
+                <th>經度 (Lon)</th>
+                <th>漁獲量 (kg)</th>
+            </tr>
+        </thead>
+        <tbody id="vessel-table-body">
+            <tr><td colspan="6" style="text-align:center;">資料載入中...</td></tr>
+        </tbody>
+    </table>
 
-    <div id="map"></div>
+    <div id="last-update" class="update-time">等待更新...</div>
+</div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // 初始化地圖
-        var map = L.map('map', { zoomControl: false }).setView([-2, 60], 3);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; CARTO'
-        }).addTo(map);
-        // 新增一個保險箱，用來存放所有船隻的 Marker
-        var vesselMarkers = {}; 
+<script>
+    // 這是關鍵的 JavaScript，用來讀取 data.json
+    async function loadVesselData() {
+        try {
+            // 讀取同目錄下的 data.json (由 GitHub Actions 產生)
+            const response = await fetch('data.json?t=' + list_of_dates = new Date().getTime()); 
+            const data = await response.json();
 
-        // 定義「聚焦船隻」的函數
-        function focusVessel(name) {
-            var marker = vesselMarkers[name];
-            if (marker) {
-                // 1. 將地圖中心移到該船位置，並放大縮放層級到 7
-                map.setView(marker.getLatLng(), 7, { animate: true });
-                // 2. 自動彈出詳細資料視窗
-                marker.openPopup();
-        
-                // 3. 如果是手機版，點擊後自動收合面板
-                if (window.innerWidth <= 768) {
-                    document.getElementById('statsPanel').classList.remove('active');
-                }
-            }
-        }
+            const tableBody = document.getElementById('vessel-table-body');
+            tableBody.innerHTML = ''; // 清空載入中字樣
 
-        var vesselLayer = L.layerGroup().addTo(map);
-        var tunaLayer = L.layerGroup().addTo(map);
-        var portLayer = L.layerGroup().addTo(map);
+            data.forEach(vessel => {
+                const row = `
+                    <tr>
+                        <td><strong>${vessel.name}</strong></td>
+                        <td>${vessel.id}</td>
+                        <td>${vessel.date}</td>
+                        <td>${vessel.lat}</td>
+                        <td>${vessel.lon}</td>
+                        <td><span class="status-tag">${vessel.weight}</span></td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
 
-        // 讀取資料與錯誤診斷
-// 1. 先在 fetch 外部定義「標記保險箱」與「聚焦函數」
-var vesselMarkers = {}; 
-
-function focusVessel(name) {
-    var marker = vesselMarkers[name];
-    if (marker) {
-        map.setView(marker.getLatLng(), 8, { animate: true });
-        marker.openPopup();
-        // 手機版點擊後收合面板
-        if (window.innerWidth <= 768) {
-            document.getElementById('statsPanel').classList.remove('active');
+            document.getElementById('last-update').innerText = "系統自動同步時間：" + data[0].update_time;
+            
+        } catch (error) {
+            console.error("無法讀取漁獲資料:", error);
+            document.getElementById('vessel-table-body').innerHTML = 
+                '<tr><td colspan="6" style="text-align:center; color:red;">❌ 無法載入最新數據，請確認 GitHub Action 執行狀態。</td></tr>';
         }
     }
-}
 
-// 2. 讀取資料並渲染地圖
-fetch('data.json')
-    .then(res => {
-        if (!res.ok) throw new Error('找不到數據檔案 (data.json)。');
-        return res.json();
-    })
-    .then(data => {
-        // 更新同步時間
-        document.getElementById('update-time').innerText = `最後同步：${data.last_update}`;
-        
-        // 更新匯率 (精確到小數點)
-        if (data.finance) {
-            document.getElementById('usd-jpy').innerText = data.finance.USD_JPY.toFixed(2);
-            document.getElementById('jpy-twd').innerText = parseFloat(data.finance.JPY_TWD).toFixed(4);
-            document.getElementById('usd-twd').innerText = data.finance.USD_TWD.toFixed(2);
-        }
+    // 網頁開啟後執行
+    loadVesselData();
+</script>
 
-        // --- 處理鮪魚與港口 (維持原樣) ---
-        data.tuna.forEach(p => {
-            let color = p.name.includes('大目') ? '#8b5cf6' : (p.name.includes('黃鰭') ? '#eab308' : '#22c55e');
-            L.circleMarker([p.lat, p.lng], { radius: 5, fillColor: color, color: '#fff', weight: 1, fillOpacity: 0.7 })
-             .addTo(tunaLayer).bindPopup(`<b>${p.name}</b><br>水溫: ${p.temp}°C`);
-        });
-
-        data.ports.forEach(p => {
-            L.marker([p.lat, p.lng], { icon: L.divIcon({ className: 'port-label', html: `⚓ ${p.mgo}`, iconSize: [50, 20] }) })
-             .addTo(portLayer).bindPopup(`<b>${p.name}</b><br>MGO: USD ${p.mgo}`);
-        });
-
-        // --- 重點：處理船跡與「可點擊清單」 ---
-        let statsHtml = "";
-        for (let sName in data.vessels) {
-            let history = data.vessels[sName];
-            let last = history[history.length - 1];
-            let path = history.map(h => [h.lat, h.lng]);
-
-            // A. 畫出航跡線
-            L.polyline(path, { color: '#38bdf8', weight: 2, opacity: 0.6, dashArray: '5, 8' }).addTo(vesselLayer);
-
-            // B. 建立船隻 Marker 並存入保險箱
-            let marker = L.circleMarker([last.lat, last.lng], {
-                radius: 8, fillColor: '#ef4444', color: '#fff', weight: 2, fillOpacity: 1
-            }).addTo(vesselLayer);
-
-            marker.bindPopup(`
-                <div style="color:#1e293b; min-width:150px;">
-                    <b style="font-size:14px;">🚢 ${sName}</b><hr style="margin:5px 0; border:0; border-top:1px solid #eee;">
-                    狀態：<span style="color:#059669;">${last.status || '作業中'}</span><br>
-                    時間：${last.time}<br>
-                    座標：${last.lat.toFixed(2)}, ${last.lng.toFixed(2)}
-                </div>
-            `);
-
-            vesselMarkers[sName] = marker; // 存入保險箱
-
-            // C. 生成左下角「可點擊」的清單 HTML
-            statsHtml += `
-                <div onclick="focusVessel('${sName}')" 
-                     style="cursor:pointer; padding:10px 0; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:bold;">🚢 ${sName}</span>
-                    <span style="font-size:10px; color:#94a3b8;">定位 ❯</span>
-                </div>`;
-        }
-        document.getElementById('fleet-stats').innerHTML = statsHtml;
-    })
-    .catch(err => alert("系統提示：" + err.message));
-
-        if (window.innerWidth <= 768) {
-            const btn = document.createElement('div');
-            btn.className = 'mobile-toggle'; btn.innerHTML = '📊';
-            document.body.appendChild(btn);
-            btn.onclick = () => document.getElementById('statsPanel').classList.toggle('active');
-        }
-    </script>
 </body>
 </html>
