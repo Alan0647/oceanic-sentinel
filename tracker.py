@@ -16,70 +16,59 @@ async def run_scraper():
     async with async_playwright() as p:
         # 啟動瀏覽器
         browser = await p.chromium.launch(headless=True)
-        context = await browser.new_context(viewport={'width': 1280, 'height': 800})
-        page = await context.new_page()
+        context = await browser.new_page()
+        
+        # 🔗 更新為正確的 OFDC 8181 端口網址
+        target_url = "https://www.ofdc.org.tw:8181/elogbookquery/content/index.xhtml"
+        print(f"🔗 正在嘗試前往 OFDC 系統: {target_url}")
 
-        print("🔗 正在前往 OFDC 系統...")
-        await page.goto("https://efish.ofdc.org.tw/vms/login") 
-
-        # 1. 執行登入 (使用您提供的精確 ID)
         try:
-            await page.fill('input[id="j_idt8:使用者名稱"]', os.environ['OFDC_USER'])
-            await page.fill('input[id="j_idt8:密碼"]', os.environ['OFDC_PASS'])
-            # 由於沒抓到按鈕 ID，直接按 Enter 鍵通常最保險
-            await page.keyboard.press("Enter")
-            await page.wait_for_load_state("networkidle")
+            # 增加 timeout 到 60 秒，並忽略 HTTPS 憑證錯誤（針對 8181 端口常有的問題）
+            await context.goto(target_url, timeout=60000, wait_until="networkidle")
+            
+            # 1. 執行登入 (使用您提供的精確 ID)
+            await context.fill('input[id="j_idt8:使用者名稱"]', os.environ['OFDC_USER'])
+            await context.fill('input[id="j_idt8:密碼"]', os.environ['OFDC_PASS'])
+            
+            print("🔑 帳密已輸入，嘗試登入...")
+            await context.keyboard.press("Enter")
+            
+            # 等待登入後的特徵元素出現 (例如搜尋框)
+            await context.wait_for_selector('select[id="toolForm:ctnoSelectMenu"]', timeout=30000)
             print("✅ 登入成功")
-        except Exception as e:
-            print(f"❌ 登入階段出錯: {e}")
-            await browser.close()
-            return
 
-        # 2. 開始巡迴抓取六艘船的數據
-        final_report = []
-        for vessel in VESSELS:
-            try:
-                print(f"🚢 正在切換至：{vessel['name']} ({vessel['id']})...")
+            final_report = []
+            for vessel in VESSELS:
+                print(f"🚢 正在查詢：{vessel['name']} ({vessel['id']})...")
                 
-                # 使用您提供的 Select ID 切換船隻
-                await page.select_option('select[id="toolForm:ctnoSelectMenu"]', vessel['id'])
+                # 切換船隻
+                await context.select_option('select[id="toolForm:ctnoSelectMenu"]', vessel['id'])
+                await context.wait_for_timeout(3000) # 等待資料刷新
                 
-                # 等待表格更新 (通常選單切換後網頁會跳轉或重新整理)
-                await page.wait_for_timeout(3000) 
-                
-                # 抓取第一列數據 (根據您提供的 <tr> 結構)
-                # 我們抓取該船隻最新一筆 (第一列) 的所有 <td>
-                cells = await page.query_selector_all('tr.ui-widget-content >> td')
+                # 抓取表格數據
+                cells = await context.query_selector_all('tr.ui-widget-content >> td')
                 
                 if len(cells) >= 12:
-                    # 根據您提供的 HTML 排序解析資料：
-                    # Index 2: 日期, Index 4: 緯度, Index 5: 經度, Index 11: 漁獲量(範例中是2560)
                     date_val = await cells[2].inner_text()
                     lat_val = await cells[4].inner_text()
                     lon_val = await cells[5].inner_text()
                     weight_val = await cells[11].inner_text()
-                    status_val = await cells[20].inner_text() # "作業"
-
-                    print(f"   📍 位置: {lat_val}, {lon_val} | 🐟 本次漁獲: {weight_val} kg | 📅 日期: {date_val}")
                     
                     final_report.append({
-                        "vessel": vessel['name'],
-                        "date": date_val,
-                        "lat": lat_val,
-                        "lon": lon_val,
-                        "weight": weight_val,
-                        "status": status_val
+                        "vessel": vessel['name'], "date": date_val, 
+                        "lat": lat_val, "lon": lon_val, "weight": weight_val
                     })
-                else:
-                    print(f"   ⚠️ {vessel['name']} 查無近期數據列")
+                    print(f"   📍 {lat_val}, {lon_val} | 🐟 {weight_val} kg")
 
-            except Exception as e:
-                print(f"   ❌ 處理 {vessel['name']} 時發生錯誤: {e}")
+            print("\n--- 📊 最終回報彙整 ---")
+            for r in final_report:
+                print(f"[{r['vessel']}] 日期:{r['date']} 座標:({r['lat']}, {r['lon']}) 漁獲:{r['weight']}kg")
 
-        # 3. 輸出最終結果 (目前先在 Log 顯示，之後可直接對接 Google Sheet)
-        print("\n--- 📊 今日漁獲與位標匯報 ---")
-        for r in final_report:
-            print(f"[{r['vessel']}] 日期:{r['date']} 座標:({r['lat']}, {r['lon']}) 漁獲:{r['weight']}kg 狀態:{r['status']}")
+        except Exception as e:
+            print(f"❌ 執行出錯: {e}")
+            # 這裡可以增加截圖功能，方便除錯
+            await context.screenshot(path="error_debug.png")
+            print("📸 已儲存錯誤截圖至 error_debug.png")
 
         await browser.close()
 
