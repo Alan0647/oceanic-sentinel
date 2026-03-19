@@ -3,20 +3,50 @@
         "name": "信隆168",
         "id": "61436",
         "date": "2026/03/13",
-        "lat": "-8.4333",
-        "lon": "-1.3667",
+        "lat": -8.4333,
+        "lon": -1.3667,
         "sea_temp": "26.8",
-        "update_time": "2026-03-19 03:58",
-        "weight": "2560"
+        "bait": "",
+        "total_weight": "2560",
+        "update_time": "2026-03-19 04:08",
+        "catch_details": [
+            {
+                "species": "2026/03/13",
+                "weight": "南劍旗魚 > 45",
+                "count": "92",
+                "process": "2"
+            }
+        ]
     },
     {
         "name": "昱友668",
         "id": "61508",
         "date": "2026/03/13",
-        "lat": "-7.55",
-        "lon": "-1.1333",
+        "lat": -7.55,
+        "lon": -1.1333,
         "sea_temp": "26.0",
-        "update_time": "2026-03-19 03:58",
-        "weight": "2550"
+        "bait": "",
+        "total_weight": "2550",
+        "update_time": "2026-03-19 04:09",
+        "catch_details": [
+            {
+                "species": "2026/03/13",
+                "weight": "大目鮪 26-40",
+                "count": "176",
+                "process": "5"
+            },
+            {
+                "species": "2026/03/13",
+                "weight": "大目鮪 > 40",
+                "count": "1314",
+                "process": "22"
+            },
+            {
+                "species": "2026/03/13",
+                "weight": "黃鰭鮪 > 25",
+                "count": "63",
+                "process": "1"
+            }
+        ]
     }
 ]
