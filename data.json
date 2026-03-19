@@ -1,5 +1,9 @@
 {
+<<<<<<< Updated upstream
     "update_time": "2026-03-19 05:23",
+=======
+    "update_time": "2026-03-19 06:09",
+>>>>>>> Stashed changes
     "vessels": [
         {
             "name": "信隆168",
@@ -54,13 +58,13 @@
         "exchange": [
             {
                 "name": "USD/TWD",
-                "latest": "31.99",
+                "latest": "31.97",
                 "week_h": "32.12",
                 "week_l": "31.53"
             },
             {
                 "name": "USD/JPY",
-                "latest": "159.68",
+                "latest": "159.74",
                 "week_h": "159.85",
                 "week_l": "157.87"
             },
@@ -74,18 +78,27 @@
         "oil": [
             {
                 "name": "WTI 輕原油",
+<<<<<<< Updated upstream
                 "latest": "96.13",
+=======
+                "latest": "96.48",
+>>>>>>> Stashed changes
                 "week_h": "102.44",
                 "week_l": "81.79"
             },
             {
                 "name": "布蘭特原油",
+<<<<<<< Updated upstream
                 "latest": "106.65",
+=======
+                "latest": "107.58",
+>>>>>>> Stashed changes
                 "week_h": "111.86",
                 "week_l": "86.32"
             },
             {
                 "name": "MGO - 新加坡",
+<<<<<<< Updated upstream
                 "latest": "959.9",
                 "week_h": "1007.9",
                 "week_l": "911.9"
@@ -143,6 +156,65 @@
                 "latest": "959.9",
                 "week_h": "1007.9",
                 "week_l": "911.9"
+=======
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+            },
+            {
+                "name": "MGO - 高雄",
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+            },
+            {
+                "name": "MGO - 釜山",
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+            },
+            {
+                "name": "MGO - 拉斯帕爾馬斯",
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+            },
+            {
+                "name": "MGO - 開普敦",
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+            },
+            {
+                "name": "MGO - 達卡",
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+            },
+            {
+                "name": "MGO - 阿必尚",
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+            },
+            {
+                "name": "MGO - 路易港",
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+            },
+            {
+                "name": "MGO - 維多利亞",
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+            },
+            {
+                "name": "MGO - 檳城",
+                "latest": "966.9",
+                "week_h": "1015.2",
+                "week_l": "918.5"
+>>>>>>> Stashed changes
             }
         ]
     }
