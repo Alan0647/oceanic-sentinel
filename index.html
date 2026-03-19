@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>海洋哨兵 5.0 | 指揮官專用版</title>
+    <title>海洋哨兵 6.0 | 昱友戰略指揮中心</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root { --navy: #002b5e; --gold: #c5a059; --ofdc-blue: #0070c0; }
@@ -11,64 +11,51 @@
         header { background: var(--navy); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; }
         #menu-btn { background: var(--gold); border: none; padding: 8px 12px; color: white; border-radius: 4px; cursor: pointer; font-weight: bold; }
         
-        #main { flex: 1; display: flex; position: relative; overflow: hidden; }
+        #main-view { flex: 1; display: flex; position: relative; overflow: hidden; }
         #map { flex: 1; z-index: 1; }
         
         #sidebar { 
             position: absolute; right: 0; top: 0; bottom: 0; width: 360px; 
             background: white; box-shadow: -2px 0 15px rgba(0,0,0,0.3); 
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 2500; overflow-y: auto; padding: 15px;
+            transition: 0.3s; z-index: 2500; overflow-y: auto; padding: 15px;
         }
         #sidebar.collapsed { transform: translateX(105%); }
 
         .section-header { border-left: 5px solid var(--gold); padding-left: 10px; color: var(--navy); margin: 20px 0 10px; font-weight: bold; font-size: 1.1rem; }
-        .v-card { background: #f8fafb; border-radius: 6px; padding: 10px; margin-bottom: 8px; border: 1px solid #dee2e6; cursor: pointer; }
-        .v-card span { float: right; color: var(--ofdc-blue); font-weight: bold; }
-
+        .v-card { background: #f8fafb; border-radius: 6px; padding: 12px; margin-bottom: 8px; border: 1px solid #dee2e6; cursor: pointer; }
         .m-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; }
         .m-table td { padding: 8px 5px; border-bottom: 1px solid #eee; }
-        .val-red { color: #d32f2f; font-weight: bold; }
-
-        /* 漁獲明細表格 - 修正溢出 */
-        .table-container { width: 100%; overflow-x: auto; margin-top: 10px; border: 1px solid #ccc; }
-        .c-table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 450px; }
+        .analysis-box { background: #fff9e6; border: 1px solid #ffeeba; padding: 12px; font-size: 12px; color: #856404; line-height: 1.6; border-radius: 5px; }
+        
+        /* 漁獲表格修復 */
+        .table-scroll { width: 100%; overflow-x: auto; margin-top: 10px; border: 1px solid #ccc; }
+        .c-table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 420px; }
         .c-table th { background: var(--ofdc-blue); color: white; padding: 8px 4px; border: 1px solid #fff; white-space: nowrap; }
         .c-table td { padding: 6px 4px; border: 1px solid #ccc; text-align: center; }
-        .subtotal { background: #f2f2f2; font-weight: bold; }
+        .sub { background: #f2f2f2; font-weight: bold; }
 
-        /* Popup 寬度強制修正 */
         .leaflet-popup-content { min-width: 450px !important; }
-
-        @media (max-width: 768px) { 
-            #sidebar { width: 85%; } 
-            .leaflet-popup-content { min-width: 300px !important; }
-            .c-table { min-width: 380px; font-size: 10px; }
-        }
+        @media (max-width: 768px) { #sidebar { width: 85%; } .leaflet-popup-content { min-width: 300px !important; } }
     </style>
 </head>
 <body>
-<header><div>⚓ <b>海洋哨兵 5.0</b> | 昱友企業</div><button id="menu-btn">戰略選單 ☰</button></header>
-<div id="main">
+<header><div>⚓ <b>海洋哨兵 6.0</b> | 戰略指揮面板</div><button id="menu-btn">戰略選單 ☰</button></header>
+<div id="main-view">
     <div id="map"></div>
     <div id="sidebar"> <div class="section-header">🚢 艦隊即時位置</div>
         <div id="v-list"></div>
         <div class="section-header">💱 即時匯率週報</div>
         <table class="m-table" id="ex-table"></table>
-        <div class="section-header">⛽ 全球港口油價</div>
+        <div class="section-header">⛽ 全球燃油報價 (MGO)</div>
         <table class="m-table" id="oil-table"></table>
+        <div class="section-header">💡 Integr8 專家解析</div>
+        <div id="oil-analysis" class="analysis-box">正在攫取解析...</div>
     </div>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     const map = L.map('map').setView([0, 160], 3);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-    // 海溫圖層
-    L.tileLayer.wms("https://nowcoast.noaa.gov/arcgis/services/nowcoast/analysis_ocean_sfc_sst_time/MapServer/WmsServer", {
-        layers: '1', format: 'image/png', transparent: true, opacity: 0.3
-    }).addTo(map);
-
-    // 側邊欄控制
     const sidebar = document.getElementById('sidebar');
     if (window.innerWidth <= 768) sidebar.classList.add('collapsed');
     document.getElementById('menu-btn').onclick = () => sidebar.classList.toggle('collapsed');
@@ -77,43 +64,35 @@
         const res = await fetch('data.json?t=' + Date.now());
         const d = await res.json();
         
-        // 匯率 (JPY 四位)
+        document.getElementById('oil-analysis').innerText = d.market.analysis;
         let exH = '<tr><th>幣別對</th><th>最新</th><th>週高</th><th>週低</th></tr>';
-        d.market.exchange.forEach(x => exH += `<tr><td><b>${x.name}</b></td><td class="val-red">${x.latest}</td><td>${x.week_h}</td><td>${x.week_l}</td></tr>`);
+        d.market.exchange.forEach(x => exH += `<tr><td><b>${x.name}</b></td><td style="color:red;font-weight:bold">${x.latest}</td><td>${x.week_h}</td><td>${x.week_l}</td></tr>`);
         document.getElementById('ex-table').innerHTML = exH;
 
-        // 油價 (11個)
         let oilH = '<tr><th>港口</th><th>最新</th><th>週高</th><th>週低</th></tr>';
-        d.market.oil.forEach(o => oilH += `<tr><td>${o.name}</td><td class="val-red">${o.latest}</td><td>${o.week_h}</td><td>${o.week_l}</td></tr>`);
+        d.market.oil.forEach(o => oilH += `<tr><td>${o.name}</td><td style="color:red;font-weight:bold">${o.latest}</td><td>${o.week_h}</td><td>${o.week_l}</td></tr>`);
         document.getElementById('oil-table').innerHTML = oilH;
 
-        // 艦隊
-        const list = document.getElementById('v-list');
         d.vessels.forEach(v => {
             const m = L.marker([v.lat, v.lon]).addTo(map);
             const popup = `
-                <div style="min-width:450px">
+                <div style="min-width:430px">
                     <b style="color:var(--navy);font-size:14px;">🚢 ${v.name}</b> (${v.date})<br>
                     🌡️ 海溫: ${v.temp}°C | 🍱 餌料: ${v.bait} | 📍 ${v.lat}, ${v.lon}
-                    <div class="table-container">
-                        <table class="c-table">
-                            <thead><tr><th>統一編號</th><th>日期</th><th>魚種</th><th>重量</th><th>尾數</th><th>處理</th></tr></thead>
-                            <tbody>
-                                ${v.catch_details.map(c => `<tr><td>${c.id}</td><td>${c.date}</td><td>${c.sp}</td><td>${c.wt}</td><td>${c.ct}</td><td>${c.pr}</td></tr>`).join('')}
-                                <tr class="subtotal"><td colspan="3" style="text-align:right">當日小計：</td><td>${v.subtotal_weight}</td><td>${v.subtotal_count}</td><td></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="table-scroll"><table class="c-table">
+                        <thead><tr><th>統一編號</th><th>日期</th><th>魚種</th><th>重量</th><th>尾數</th><th>處理</th></tr></thead>
+                        <tbody>
+                            ${v.catch_details.map(c => `<tr><td>${c.id}</td><td>${c.date}</td><td>${c.sp}</td><td>${c.wt}</td><td>${c.ct}</td><td>${c.pr}</td></tr>`).join('')}
+                            <tr class="sub"><td colspan="3" style="text-align:right">當日小計：</td><td>${v.subtotal_weight}</td><td>${v.subtotal_count}</td><td></td></tr>
+                        </tbody>
+                    </table></div>
                 </div>`;
             m.bindPopup(popup, { maxWidth: 500 });
-            
             const card = document.createElement('div');
             card.className = 'v-card';
-            card.innerHTML = `<b>${v.name}</b> <span>${v.subtotal_weight} kg</span><br><small>📅 ${v.date}</small>`;
+            card.innerHTML = `<b>${v.name}</b> <span style="float:right">${v.subtotal_weight} kg</span><br><small>📅 ${v.date}</small>`;
             card.onclick = () => { map.setView([v.lat, v.lon], 7); m.openPopup(); };
-            list.appendChild(card);
-            
-            // 置中昱友 668
+            document.getElementById('v-list').appendChild(card);
             if (v.id === "61508") { map.setView([v.lat, v.lon], 6); m.openPopup(); }
         });
     }
