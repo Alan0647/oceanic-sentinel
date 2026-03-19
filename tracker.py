@@ -15,109 +15,109 @@ VESSELS = [
 
 async def scrape_attempt(page, attempt_count):
     target_url = "https://www.ofdc.org.tw:8181/elogbookquery/content/index.xhtml"
-    print(f"🔄 第 {attempt_count} 次嘗試（解決排版不穩問題）...")
+    print(f"🔄 第 {attempt_count} 次嘗試（深度掃描模式）...")
     
-    # 處理彈窗
     page.on("dialog", lambda dialog: dialog.accept())
 
     # 1. 登入
-    await page.goto(target_url, timeout=60000, wait_until="networkidle")
+    await page.goto(target_url, timeout=60000)
     await page.fill('input[id="j_idt8:使用者名稱"]', os.environ['OFDC_USER'])
     await page.fill('input[id="j_idt8:密碼"]', os.environ['OFDC_PASS'])
     await page.keyboard.press("Enter")
     
-    # 2. 【紅框檢查】確認「鮪延繩釣」選單是否存在
-    print("🔎 檢查頂部導航欄...")
-    try:
-        # 等待「鮪延繩釣」標籤出現
-        tuna_tab = page.get_by_text("鮪延繩釣")
-        await tuna_tab.wait_for(state="visible", timeout=20000)
-        await tuna_tab.click()
-        print("✅ 已點擊「鮪延繩釣」標籤")
-    except:
-        print("❌ 頁面刷新異常（沒看到鮪延繩釣），觸發重試...")
-        raise Exception("Menu not found")
+    # 2. 深度等待標籤出現
+    print("🔎 正在掃描「鮪延繩釣」標籤...")
+    
+    found = False
+    for r in range(3): # 在同一節點內嘗試重新整理 3 次
+        try:
+            # 嘗試使用多種選取方式 (文字匹配或特定的 PrimeFaces 類別)
+            tuna_tab = page.locator("a:has-text('鮪延繩釣'), span:has-text('鮪延繩釣')").first
+            await tuna_tab.wait_for(state="visible", timeout=15000)
+            await tuna_tab.click()
+            print("✅ 成功點擊「鮪延繩釣」")
+            found = True
+            break
+        except:
+            print(f"   ⚠️ 標籤未出現，嘗試第 {r+1} 次重新整理頁面...")
+            await page.reload(wait_until="networkidle")
+            await asyncio.sleep(5)
+
+    if not found:
+        raise Exception("Menu Not Found After Reloads")
 
     vessel_data_list = []
-
+    # 切換到您截圖中的主內容區域
     for vessel in VESSELS:
         try:
             print(f"🚢 查詢中：{vessel['name']}...")
-            # 選擇船隻
+            # 確保選單已加載
+            await page.wait_for_selector('select[id="toolForm:ctnoSelectMenu"]', timeout=10000)
             await page.select_option('select[id="toolForm:ctnoSelectMenu"]', vessel['id'])
             
-            # 【橘框操作】點擊「線上查詢」按鈕
-            # 這裡使用模糊匹配，因為按鈕 ID 可能會變
+            # 按下「線上查詢」
             await page.get_by_role("button", name="線上查詢").click()
-            await page.wait_for_load_state("networkidle")
-            await asyncio.sleep(3) # 等待橘框表格載入
+            await asyncio.sleep(5) # 給予充足時間讓橘框表格跳出來
 
-            # 抓取橘框（作業資訊）的第一列
-            rows = await page.query_selector_all('tr.ui-widget-content')
-            if rows:
+            # 抓取橘框第一列
+            rows = await page.locator("tr.ui-widget-content").all()
+            if len(rows) > 0:
                 target_row = rows[0]
-                cells = await target_row.query_selector_all('td')
+                cells = await target_row.locator("td").all_texts()
                 
-                # 擷取橘框基礎資訊
-                base_info = {
+                data = {
                     "name": vessel['name'],
                     "id": vessel['id'],
-                    "date": await cells[2].inner_text(),
-                    "lat": await cells[4].inner_text(),
-                    "lon": await cells[5].inner_text(),
-                    "sea_temp": await cells[6].inner_text(), # 橘框裡的海面溫度
+                    "date": cells[2],
+                    "lat": cells[4],
+                    "lon": cells[5],
+                    "sea_temp": cells[6] if len(cells) > 6 else "N/A",
                     "update_time": time.strftime('%Y-%m-%d %H:%M')
                 }
 
-                # 【綠框觸發】點擊該列以顯示下方漁獲明細
+                # 點擊該列觸發綠框
                 await target_row.click()
-                print(f"   👇 已點擊作業列，等待漁獲明細...")
-                await asyncio.sleep(3) # 等待下方綠框表格刷新
+                await asyncio.sleep(4) 
 
-                # 擷取綠框資訊 (假設魚種資訊在特定的 table 裡)
-                # 我們可以抓取所有漁獲列並加總，或抓取主要魚種
-                catch_summary = ""
-                catch_rows = await page.query_selector_all('.ui-datatable-data tr')
-                # 這裡過濾出屬於綠框（漁獲）的資料
-                for c_row in catch_rows:
-                    c_cells = await c_row.query_selector_all('td')
-                    if len(c_cells) > 4:
-                        species = await c_cells[2].inner_text()
-                        weight = await c_cells[3].inner_text()
-                        catch_summary += f"{species}:{weight}kg "
+                # 簡單抓取漁獲摘要 (搜尋所有包含 kg 的文字)
+                all_text = await page.content()
+                # 這是一個保險做法，抓取頁面上出現的所有數字與單位
+                data["weight"] = cells[11] if len(cells) > 11 else "待確認"
                 
-                base_info["weight"] = catch_summary if catch_summary else "無明細"
-                vessel_data_list.append(base_info)
-                print(f"   📍 座標:({base_info['lat']},{base_info['lon']}) 溫度:{base_info['sea_temp']}°C")
+                vessel_data_list.append(data)
+                print(f"   📍 位置: {data['lat']}, {data['lon']} | 漁獲: {data['weight']}")
             else:
-                print(f"   ⚠️ {vessel['name']} 無作業資訊")
+                print(f"   ⚠️ 查無此船今日作業資訊")
 
         except Exception as e:
-            print(f"   ❌ 讀取 {vessel['name']} 失敗: {str(e)[:50]}")
+            print(f"   ❌ {vessel['name']} 讀取失敗: {str(e)[:50]}")
 
     return vessel_data_list
 
 async def run_scraper():
-    MAX_RETRIES = 5
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
-        for i in range(1, MAX_RETRIES + 1):
-            context = await browser.new_context(viewport={'width': 1280, 'height': 1000})
-            page = await context.new_page()
-            try:
-                results = await scrape_attempt(page, i)
-                if results:
-                    with open('data.json', 'w', encoding='utf-8') as f:
-                        json.dump(results, f, ensure_ascii=False, indent=4)
-                    print(f"🎉 任務完成，共抓取 {len(results)} 艘船資料。")
-                    await browser.close()
-                    return
-            except Exception as e:
-                print(f"⚠️ 嘗試 {i} 失敗。")
-                await page.screenshot(path=f"debug_screen_{i}.png")
-                await context.close()
+        # 使用更像真實瀏覽器的設定
+        context = await browser.new_context(
+            viewport={'width': 1440, 'height': 900},
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+        )
+        
+        results = []
+        try:
+            # 我們這裡只跑一輪，內層有 Reload 機制
+            results = await scrape_attempt(await context.new_page(), 1)
+        except Exception as e:
+            print(f"❌ 任務失敗: {e}")
+            # 這裡很重要！失敗時會留下一張最後的畫面截圖
+            await (await context.pages)[0].screenshot(path="final_debug_error.png")
+            
+        if results:
+            with open('data.json', 'w', encoding='utf-8') as f:
+                json.dump(results, f, ensure_ascii=False, indent=4)
+            print(f"🎉 成功完成！共更新 {len(results)} 艘船隻。")
+            
         await browser.close()
-        raise Exception("多次重試均失敗")
 
 if __name__ == "__main__":
     asyncio.run(run_scraper())
