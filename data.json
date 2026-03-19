@@ -1,12 +1,16 @@
 {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "update_time": "2026-03-19 05:23",
 =======
     "update_time": "2026-03-19 06:09",
 >>>>>>> Stashed changes
 =======
     "update_time": "2026-03-19 06:31",
+>>>>>>> Stashed changes
+=======
+    "update_time": "2026-03-19 07:05",
 >>>>>>> Stashed changes
     "vessels": [
         {
@@ -63,9 +67,13 @@
             {
                 "name": "USD/TWD",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 "latest": "31.97",
 =======
                 "latest": "31.89",
+>>>>>>> Stashed changes
+=======
+                "latest": "31.96",
 >>>>>>> Stashed changes
                 "week_h": "32.12",
                 "week_l": "31.53"
@@ -73,7 +81,11 @@
             {
                 "name": "USD/JPY",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 "latest": "159.74",
+=======
+                "latest": "159.65",
+>>>>>>> Stashed changes
                 "week_h": "159.85",
                 "week_l": "157.87"
 =======
@@ -94,6 +106,7 @@
                 "name": "WTI 輕原油",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 "latest": "96.13",
 =======
                 "latest": "96.48",
@@ -101,11 +114,15 @@
 =======
                 "latest": "96.18",
 >>>>>>> Stashed changes
+=======
+                "latest": "96.64",
+>>>>>>> Stashed changes
                 "week_h": "102.44",
                 "week_l": "81.79"
             },
             {
                 "name": "布蘭特原油",
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
                 "latest": "106.65",
@@ -115,11 +132,15 @@
 =======
                 "latest": "107.40",
 >>>>>>> Stashed changes
+=======
+                "latest": "108.19",
+>>>>>>> Stashed changes
                 "week_h": "111.86",
                 "week_l": "86.32"
             },
             {
                 "name": "MGO - 新加坡",
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
                 "latest": "959.9",
@@ -296,6 +317,65 @@
                 "latest": "965.5",
                 "week_h": "1013.8",
                 "week_l": "917.2"
+>>>>>>> Stashed changes
+=======
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
+            },
+            {
+                "name": "MGO - 高雄",
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
+            },
+            {
+                "name": "MGO - 釜山",
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
+            },
+            {
+                "name": "MGO - 拉斯帕爾馬斯",
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
+            },
+            {
+                "name": "MGO - 開普敦",
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
+            },
+            {
+                "name": "MGO - 達卡",
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
+            },
+            {
+                "name": "MGO - 阿必尚",
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
+            },
+            {
+                "name": "MGO - 路易港",
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
+            },
+            {
+                "name": "MGO - 維多利亞",
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
+            },
+            {
+                "name": "MGO - 檳城",
+                "latest": "971.4",
+                "week_h": "1020.0",
+                "week_l": "922.9"
 >>>>>>> Stashed changes
             }
         ]
