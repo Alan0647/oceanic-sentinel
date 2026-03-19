@@ -9,6 +9,7 @@ VESSELS = [
 ]
 
 def fetch_market_data():
+    print("📈 抓取金融週報...")
     symbols = {"USD/TWD": "TWD=X", "USD/JPY": "JPY=X", "JPY/TWD": "JPYTWD=X", "WTI 輕原油": "CL=F", "布蘭特原油": "BZ=F"}
     res = {"exchange": [], "oil": []}
     for name, sym in symbols.items():
@@ -16,17 +17,16 @@ def fetch_market_data():
             h = yf.Ticker(sym).history(period="10d")
             if not h.empty:
                 latest, wh, wl = h['Close'].iloc[-1], h['High'].tail(7).max(), h['Low'].tail(7).min()
-                # 修正 JPY/TWD 精度
                 prec = 4 if "JPY/TWD" in name else 2
                 res["exchange"].append({"name": name, "latest": f"{latest:.{prec}f}", "week_h": f"{wh:.{prec}f}", "week_l": f"{wl:.{prec}f}"})
                 if "原油" in name: res["oil"].append({"name": name, "latest": f"{latest:.2f}", "week_h": f"{wh:.2f}", "week_l": f"{wl:.2f}"})
         except: pass
     
-    # 港口 MGO 自動換算
+    # 港口 MGO 報價
     brent = float(res["oil"][1]["latest"]) if len(res["oil"]) > 1 else 85.0
     ports = ["新加坡", "高雄", "釜山", "拉斯帕爾馬斯", "開普敦", "達卡", "阿必尚", "路易港", "維多利亞", "檳城"]
     for p in ports:
-        val = brent * 7.5 + 162
+        val = brent * 7.5 + 160
         res["oil"].append({"name": f"MGO - {p}", "latest": f"{val:.1f}", "week_h": f"{val*1.05:.1f}", "week_l": f"{val*0.95:.1f}"})
     return res
 
@@ -40,38 +40,54 @@ async def scrape_ofdc(page):
     await page.wait_for_selector("text=鮪延繩釣", timeout=30000)
     await page.click("text=鮪延繩釣")
     
-    # 確保抓到最近 7 天
-    start_date = (datetime.now() - timedelta(days=7)).strftime("%Y/%m/%d")
+    # 日期設定
+    today = datetime.now().strftime("%Y/%m/%d")
+    start_day = (datetime.now() - timedelta(days=7)).strftime("%Y/%m/%d")
     results = []
 
     for v in VESSELS:
         try:
-            print(f"🚢 正在更新：{v['name']}...")
+            print(f"🚢 深度掃描：{v['name']}...")
             await page.select_option('select[id="toolForm:ctnoSelectMenu"]', v['id'])
-            await page.locator('input[id*="Date_input"]').first.fill(start_date)
+            
+            # 強制填入起訖日期
+            d_inputs = await page.locator('input[id*="Date_input"]').all()
+            if len(d_inputs) >= 2:
+                await d_inputs[0].fill(start_day)
+                await d_inputs[1].fill(today)
+            
             await page.get_by_role("button", name="線上查詢").click()
-            await asyncio.sleep(5)
-
-            # [新增] 點擊日期表頭兩次，確保「最新資料」排在第一列
-            try:
-                date_header = page.locator("th:has-text('日期')").first
-                await date_header.click()
-                await asyncio.sleep(1)
-                await date_header.click()
-                await asyncio.sleep(2)
-            except: pass
+            await asyncio.sleep(6) # 穩定等待 AJAX
 
             rows = await page.locator("tr.ui-widget-content").all()
-            if rows:
-                cells = await rows[0].locator("td").all_inner_texts()
+            if not rows:
+                print(f"   ⚠️ {v['name']} 查無資料")
+                continue
+
+            # 【核心修正】遍歷所有行，找出日期最新的一行
+            latest_row = None
+            latest_date_str = ""
+
+            for row in rows:
+                cells = await row.locator("td").all_inner_texts()
+                if len(cells) > 2:
+                    current_date = cells[2] # 日期在第 3 欄
+                    if current_date > latest_date_str:
+                        latest_date_str = current_date
+                        latest_row = row
+
+            if latest_row:
+                cells = await latest_row.locator("td").all_inner_texts()
                 data = {
                     "name": v['name'], "id": v['id'], "date": cells[2],
                     "lat": float(cells[4]), "lon": float(cells[5]),
                     "temp": cells[6], "bait": cells[16], "catch_details": []
                 }
-                await rows[0].click()
-                await asyncio.sleep(3)
-                # 抓取明細
+                
+                # 點擊該列以獲取明細
+                await latest_row.click()
+                await asyncio.sleep(4)
+                
                 c_rows = await page.locator(".ui-datatable-data").nth(1).locator("tr").all()
                 tw, tc = 0.0, 0
                 for cr in c_rows:
@@ -83,7 +99,10 @@ async def scrape_ofdc(page):
                 data["subtotal_weight"] = f"{tw:.1f}"
                 data["subtotal_count"] = tc
                 results.append(data)
-        except: continue
+                print(f"   ✅ 成功抓取最新日期：{data['date']}")
+        except Exception as e:
+            print(f"   ❌ {v['name']} 失敗: {e}")
+            continue
     return results
 
 async def main():
@@ -92,8 +111,10 @@ async def main():
         page = await browser.new_page()
         v_data = await scrape_ofdc(page)
         m_data = fetch_market_data()
+        output = {"update_time": time.strftime('%Y-%m-%d %H:%M'), "vessels": v_data, "market": m_data}
         with open('data.json', 'w', encoding='utf-8') as f:
-            json.dump({"update_time": time.strftime('%Y-%m-%d %H:%M'), "vessels": v_data, "market": m_data}, f, ensure_ascii=False, indent=4)
+            json.dump(output, f, ensure_ascii=False, indent=4)
         await browser.close()
 
-if __name__ == "__main__": asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
