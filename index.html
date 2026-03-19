@@ -3,63 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>海洋哨兵 3.5 | 昱友/信隆 戰略指揮中心</title>
+    <title>海洋哨兵 4.0 | 戰略指揮中心</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        :root { --navy: #002b5e; --gold: #c5a059; --blue: #0056b3; }
-        body { margin: 0; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        header { background: var(--navy); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        :root { --navy: #002b5e; --gold: #c5a059; --ofdc-blue: #0070c0; --subtotal-gray: #f2f2f2; }
+        body { margin: 0; font-family: sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        header { background: var(--navy); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; }
         #menu-btn { background: var(--gold); border: none; padding: 8px 12px; color: white; border-radius: 4px; cursor: pointer; font-weight: bold; }
         #main-view { flex: 1; display: flex; position: relative; }
         #map { flex: 1; z-index: 1; }
-        #sidebar { 
-            position: absolute; right: 0; top: 0; bottom: 0; width: 360px; 
-            background: white; box-shadow: -2px 0 15px rgba(0,0,0,0.3); 
-            transition: 0.3s; z-index: 2500; overflow-y: auto; padding: 15px;
-        }
+        #sidebar { position: absolute; right: 0; top: 0; bottom: 0; width: 360px; background: white; box-shadow: -2px 0 15px rgba(0,0,0,0.3); transition: 0.3s; z-index: 2500; overflow-y: auto; padding: 15px; }
         #sidebar.collapsed { transform: translateX(105%); }
         
-        /* 區塊標題樣式 */
-        .section-header { border-left: 5px solid var(--gold); padding-left: 10px; color: var(--navy); margin: 20px 0 10px; font-weight: bold; font-size: 1.1rem; }
-        
-        /* 艦隊清單樣式 */
-        .vessel-card { background: #f4f7f9; border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; border: 1px solid #e1e8ed; }
-        .vessel-card:hover { background: #eef2f5; border-color: var(--gold); }
-        .vessel-card b { color: var(--navy); font-size: 1rem; }
-        .vessel-card span { float: right; color: var(--blue); font-weight: bold; }
+        /* 側邊欄艦隊清單置頂 */
+        .section-header { border-left: 5px solid var(--gold); padding-left: 10px; color: var(--navy); margin: 15px 0 10px; font-weight: bold; }
+        .vessel-card { background: #f8fafb; border-radius: 6px; padding: 10px; margin-bottom: 8px; border: 1px solid #dee2e6; cursor: pointer; }
+        .vessel-card:hover { border-color: var(--gold); }
+        .vessel-card b { color: var(--navy); }
+        .vessel-card span { float: right; color: var(--ofdc-blue); font-weight: bold; }
 
-        /* 金融數據表格 */
+        /* 金融表格 */
         .m-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; }
-        .m-table th { text-align: left; border-bottom: 2px solid var(--gold); padding: 6px; }
-        .m-table td { padding: 8px 6px; border-bottom: 1px solid #eee; }
+        .m-table th { text-align: left; border-bottom: 2px solid var(--gold); padding: 5px; }
+        .m-table td { padding: 6px; border-bottom: 1px solid #eee; }
         .val-red { color: #d32f2f; font-weight: bold; }
 
-        /* 漁獲明細表格 (還原藍色標題) */
-        .c-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
-        .c-table th { background: var(--blue); color: white; border: 1px solid #ddd; padding: 6px; text-align: center; }
-        .c-table td { border: 1px solid #ddd; padding: 6px; text-align: center; }
-        .c-table tr:nth-child(even) { background: #f9f9f9; }
+        /* 官方漁獲表格還原 (對標截圖) */
+        .ofdc-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; border: 1px solid #ccc; }
+        .ofdc-table th { background: var(--ofdc-blue); color: white; padding: 8px 4px; border: 1px solid #fff; text-align: center; }
+        .ofdc-table td { padding: 6px 4px; border: 1px solid #ccc; text-align: center; }
+        .ofdc-subtotal { background: var(--subtotal-gray); font-weight: bold; }
 
         @media (max-width: 768px) { #sidebar { width: 85%; } }
     </style>
 </head>
 <body>
-<header>
-    <div>⚓ <b>海洋哨兵 3.5</b> | 戰略指揮中心</div>
-    <button id="menu-btn">選單 ☰</button>
-</header>
+<header><div>⚓ <b>海洋哨兵 4.0</b> | 戰略指揮中心</div><button id="menu-btn">選單 ☰</button></header>
 <div id="main-view">
     <div id="map"></div>
     <div id="sidebar" class="collapsed">
         <div class="section-header">🚢 艦隊即時位置</div>
-        <div id="vessel-list-top"></div>
+        <div id="v-list-top"></div>
 
         <div class="section-header">📊 金融週報 (一週高低)</div>
         <table class="m-table" id="ex-table"></table>
         <table class="m-table" id="oil-table"></table>
         
         <div class="section-header">🐟 魚場分布預測</div>
-        <div style="font-size: 12px; padding: 5px; color: #666;">
+        <div style="font-size: 12px; color: #666; padding: 5px;">
             <label><input type="checkbox" checked onchange="toggleL('b')"> 大目鮪 (18-22°C)</label> <br>
             <label><input type="checkbox" onchange="toggleL('y')"> 黃鰭鮪 (24-30°C)</label>
         </div>
@@ -71,63 +62,77 @@
     const map = L.map('map').setView([0, 160], 3);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    // WMS 海溫圖層
+    // 衛星海溫圖層
     L.tileLayer.wms("https://nowcoast.noaa.gov/arcgis/services/nowcoast/analysis_ocean_sfc_sst_time/MapServer/WmsServer", {
         layers: '1', format: 'image/png', transparent: true, opacity: 0.4
     }).addTo(map);
 
     document.getElementById('menu-btn').onclick = () => document.getElementById('sidebar').classList.toggle('collapsed');
 
-    async function loadData() {
+    async function load() {
         try {
             const res = await fetch('data.json?t=' + Date.now());
             const d = await res.json();
             
-            // 1. 渲染金融數據
-            let exH = '<tr><th>幣別</th><th>最新</th><th>一週最高</th><th>一週最低</th></tr>';
+            // 1. 金融
+            let exH = '<tr><th>幣別對</th><th>最新價</th><th>週最高</th><th>週最低</th></tr>';
             d.market.exchange.forEach(x => exH += `<tr><td><b>${x.name}</b></td><td class="val-red">${x.latest}</td><td>${x.week_h}</td><td>${x.week_l}</td></tr>`);
             document.getElementById('ex-table').innerHTML = exH;
 
-            let oilH = '<tr><th>港口/商品</th><th>最新</th><th>一週最高</th><th>一週最低</th></tr>';
+            let oilH = '<tr><th>港口/商品</th><th>最新</th><th>週最高</th><th>週最低</th></tr>';
             d.market.oil.forEach(o => oilH += `<tr><td>${o.name}</td><td class="val-red">${o.latest}</td><td>${o.week_h}</td><td>${o.week_l}</td></tr>`);
             document.getElementById('oil-table').innerHTML = oilH;
 
-            // 2. 渲染艦隊清單與標註
-            const listDiv = document.getElementById('vessel-list-top');
-            let focused = false;
+            // 2. 艦隊
+            const listDiv = document.getElementById('v-list-top');
+            let centerMarker = null;
 
             d.vessels.forEach(v => {
-                // 地圖標註
                 const marker = L.marker([v.lat, v.lon]).addTo(map);
-                const popupContent = `
-                    <div style="min-width:300px">
+                const popupBody = `
+                    <div style="min-width:350px">
                         <b style="color:var(--navy);font-size:14px;">🚢 ${v.name}</b> (${v.date})<br>
-                        🌡️ 海溫: ${v.temp}°C | 🍱 餌料: ${v.bait} | 📍 座標: ${v.lat}, ${v.lon}
-                        <table class="c-table">
-                            <thead><tr><th>魚種</th><th>重量</th><th>尾數</th><th>處理</th></tr></thead>
-                            <tbody>${v.catch_details.map(c => `<tr><td>${c.sp}</td><td>${c.wt}</td><td>${c.ct}</td><td>${c.pr}</td></tr>`).join('')}</tbody>
+                        🌡️ 海溫: ${v.temp}°C | 🍱 餌料: ${v.bait} | 📍 ${v.lat}, ${v.lon}
+                        <table class="ofdc-table">
+                            <thead>
+                                <tr><th>統一編號</th><th>作業日期</th><th>魚種</th><th>重量</th><th>尾數</th><th>處理型態</th></tr>
+                            </thead>
+                            <tbody>
+                                ${v.catch_details.map(c => `
+                                    <tr><td>${c.id}</td><td>${c.date}</td><td>${c.sp}</td><td>${c.wt}</td><td>${c.ct}</td><td>${c.pr}</td></tr>
+                                `).join('')}
+                                <tr class="ofdc-subtotal">
+                                    <td colspan="3" style="text-align:right">小計：</td>
+                                    <td>${v.subtotal_weight}</td>
+                                    <td>${v.subtotal_count}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 `;
-                marker.bindPopup(popupContent);
+                marker.bindPopup(popupBody);
 
-                // 側邊欄清單
                 const card = document.createElement('div');
                 card.className = 'vessel-card';
-                card.innerHTML = `<b>${v.name}</b> <span>${v.total_weight} kg</span><br><small>📍 ${v.lat}, ${v.lon}</small>`;
+                card.innerHTML = `<b>${v.name}</b> <span>${v.subtotal_weight} kg</span><br><small>📍 ${v.lat}, ${v.lon}</small>`;
                 card.onclick = () => { map.setView([v.lat, v.lon], 7); marker.openPopup(); };
                 listDiv.appendChild(card);
 
-                // 自動定位昱友668 (船號 61508)
-                if (v.id === "61508" || v.name.includes("668")) {
-                    map.setView([v.lat, v.lon], 5);
-                    marker.openPopup();
-                    focused = true;
+                // 自動置中昱友 668 (ID: 61508)
+                if (v.id === "61508") {
+                    centerMarker = {lat: v.lat, lon: v.lon, marker: marker};
                 }
             });
-        } catch(e) { console.error("資料載入失敗", e); }
+
+            if (centerMarker) {
+                map.setView([centerMarker.lat, centerMarker.lon], 6);
+                centerMarker.marker.openPopup();
+            }
+
+        } catch(e) { console.error("加載失敗", e); }
     }
-    loadData();
+    load();
 </script>
 </body>
 </html>
