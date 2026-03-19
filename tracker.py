@@ -75,4 +75,23 @@ async def scrape_ofdc(page):
                         })
                         try: total_w += float(cc[4])
                         except: pass
-                        try:
+                        try: total_c += int(cc[5])
+                        except: pass
+                # 更新總重與總尾數
+                data["subtotal_weight"] = f"{total_w:.1f}"
+                data["subtotal_count"] = total_c
+                results.append(data)
+        except: continue
+    return results
+
+async def main():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        v_data = await scrape_ofdc(page)
+        m_data = fetch_market_data()
+        with open('data.json', 'w', encoding='utf-8') as f:
+            json.dump({"update_time": time.strftime('%Y-%m-%d %H:%M'), "vessels": v_data, "market": m_data}, f, ensure_ascii=False, indent=4)
+        await browser.close()
+
+if __name__ == "__main__": asyncio.run(main())
