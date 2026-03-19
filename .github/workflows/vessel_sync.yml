@@ -31,18 +31,12 @@ jobs:
           OFDC_PASS: ${{ secrets.OFDC_PASS }}
         run: python tracker.py
 
-      - name: 5. 強制同步數據 (解決損壞問題)
+      - name: 5. 同步數據回倉庫
         if: success()
         run: |
           git config --global user.name "Vessel-Bot"
           git config --global user.email "bot@example.com"
-          
-          # 1. 先將產出的 data.json 暫存到本地 commit
           git add data.json
-          git commit -m "自動更新數據: $(date)" || echo "無資料變動"
-          
-          # 2. 拉取遠端，若有衝突，強制以本次抓取的數據 (theirs) 為準
+          git commit -m "戰略數據更新: $(date)" || echo "無變動"
           git pull --rebase -X theirs origin main
-          
-          # 3. 推送
           git push origin main
