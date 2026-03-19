@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-03-19 07:57",
+    "update_time": "2026-03-19 08:12",
     "vessels": [
         {
             "name": "信隆168",
@@ -104,31 +104,31 @@
         "exchange": [
             {
                 "name": "USD/TWD",
-                "latest": "31.97",
+                "latest": "31.94",
                 "week_h": "32.12",
                 "week_l": "31.53"
             },
             {
                 "name": "USD/JPY",
-                "latest": "159.37",
+                "latest": "159.11",
                 "week_h": "159.85",
                 "week_l": "157.87"
             },
             {
                 "name": "JPY/TWD",
-                "latest": "0.2008",
+                "latest": "0.2011",
                 "week_h": "0.2015",
                 "week_l": "0.1990"
             },
             {
                 "name": "WTI 輕原油",
-                "latest": "96.53",
+                "latest": "96.41",
                 "week_h": "102.44",
                 "week_l": "81.79"
             },
             {
                 "name": "布蘭特原油",
-                "latest": "108.70",
+                "latest": "108.37",
                 "week_h": "111.86",
                 "week_l": "86.32"
             }
@@ -136,75 +136,75 @@
         "oil": [
             {
                 "name": "WTI 輕原油",
-                "latest": "96.53",
+                "latest": "96.41",
                 "week_h": "102.44",
                 "week_l": "81.79"
             },
             {
                 "name": "布蘭特原油",
-                "latest": "108.70",
+                "latest": "108.37",
                 "week_h": "111.86",
                 "week_l": "86.32"
             },
             {
                 "name": "MGO - 新加坡",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             },
             {
                 "name": "MGO - 高雄",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             },
             {
                 "name": "MGO - 釜山",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             },
             {
                 "name": "MGO - 拉斯帕爾馬斯",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             },
             {
                 "name": "MGO - 開普敦",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             },
             {
                 "name": "MGO - 達卡",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             },
             {
                 "name": "MGO - 阿必尚",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             },
             {
                 "name": "MGO - 路易港",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             },
             {
                 "name": "MGO - 維多利亞",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             },
             {
                 "name": "MGO - 檳城",
-                "latest": "975.2",
-                "week_h": "1024.0",
-                "week_l": "926.5"
+                "latest": "972.8",
+                "week_h": "1021.4",
+                "week_l": "924.1"
             }
         ]
     }
