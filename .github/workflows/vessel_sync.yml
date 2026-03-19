@@ -22,18 +22,16 @@ jobs:
 
       - name: 3. 安裝組件
         run: |
-          pip install playwright yfinance copernicusmarine netCDF4 numpy
+          pip install playwright yfinance
           playwright install chromium
 
       - name: 4. 執行數據抓取 (漁獲 + 金融 + 水文預測)
         env:
           OFDC_USER: ${{ secrets.OFDC_USER }}
           OFDC_PASS: ${{ secrets.OFDC_PASS }}
-          COPERNICUS_USER: ${{ secrets.COPERNICUS_USER }}
-          COPERNICUS_PASS: ${{ secrets.COPERNICUS_PASS }}
         run: python tracker.py
 
-      - name: 5. 同步數據並存回倉庫
+      - name: 5. 同步數據並存回倉庫 (防衝突模式)
         if: success()
         run: |
           git config --global user.name "Vessel-Bot"
@@ -43,4 +41,4 @@ jobs:
           git pull --rebase origin main
           git stash pop || echo "No stash to pop"
           git add data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "自動更新數據: $(date)" && git push origin main)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "更新數據報表: $(date)" && git push origin main)
