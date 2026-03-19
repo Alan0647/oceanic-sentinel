@@ -1,58 +1,71 @@
-import os, asyncio, json, time
+import os, asyncio, json, time, yfinance as yf
 from datetime import datetime, timedelta
 from playwright.async_api import async_playwright
 
-# 1. 配置追蹤目標
 VESSELS = [
     {"name": "信隆168", "id": "61436"}, {"name": "昱友668", "id": "61508"},
     {"name": "信友16", "id": "70157"}, {"name": "信隆216", "id": "70296"},
     {"name": "高欣6", "id": "70506"}, {"name": "隆昌3", "id": "70554"}
 ]
 
-# 2. 模擬金融數據 (建議後續串接 Investing API，此處先建立符合您截圖格式的結構)
-def get_market_data():
-    return {
-        "exchange": [
-            {"pair": "USD/TWD", "latest": "32.15", "week_h": "32.40", "week_l": "31.95"},
-            {"pair": "USD/JPY", "latest": "149.20", "week_h": "150.80", "week_l": "148.10"},
-            {"pair": "JPY/TWD", "latest": "0.2155", "week_h": "0.2210", "week_l": "0.2130"}
-        ],
-        "oil": [
-            {"port": "WTI 輕原油", "latest": "93.12", "week_h": "94.65", "week_l": "74.48"},
-            {"port": "布蘭特 (Brent)", "latest": "105.80", "week_h": "107.10", "week_l": "81.00"},
-            {"port": "MGO - 新加坡", "latest": "905.00", "week_h": "1105.0", "week_l": "749.0"},
-            {"port": "MGO - 高雄", "latest": "915.00", "week_h": "1120.0", "week_l": "760.0"},
-            {"port": "MGO - 釜山", "latest": "1150.0", "week_h": "1280.0", "week_l": "700.0"},
-            {"port": "MGO - 拉斯帕爾馬斯", "latest": "815.0", "week_h": "820.0", "week_l": "660.0"},
-            {"port": "MGO - 開普敦", "latest": "840.0", "week_h": "845.0", "week_l": "690.0"},
-            {"port": "MGO - 達卡", "latest": "855.0", "week_h": "860.0", "week_l": "715.0"},
-            {"port": "MGO - 阿必尚", "latest": "860.0", "week_h": "865.0", "week_l": "720.0"},
-            {"port": "MGO - 路易港", "latest": "830.0", "week_h": "835.0", "week_l": "695.0"},
-            {"port": "MGO - 維多利亞", "latest": "842.0", "week_h": "845.0", "week_l": "705.0"},
-            {"port": "MGO - 檳城", "latest": "755.0", "week_h": "760.0", "week_l": "615.0"}
-        ]
+# 抓取金融數據 (匯率與油價)
+def fetch_finance_data():
+    symbols = {
+        "USD/TWD": "TWD=X", "USD/JPY": "JPY=X", "JPY/TWD": "JPYTWD=X",
+        "WTI 原油": "CL=F", "布蘭特原油": "BZ=F"
     }
+    market_results = {"exchange": [], "oil": []}
+    
+    for name, sym in symbols.items():
+        ticker = yf.Ticker(sym)
+        hist = ticker.history(period="7d")
+        if not hist.empty:
+            latest = hist['Close'].iloc[-1]
+            week_h = hist['High'].max()
+            week_l = hist['Low'].min()
+            
+            data = {"pair": name, "latest": f"{latest:.2f}", "week_h": f"{week_h:.2f}", "week_l": f"{week_l:.2f}"}
+            if "/" in name: market_results["exchange"].append(data)
+            else: market_results["oil"].append(data)
 
-async def scrape_vessels(page):
-    target_url = "https://www.ofdc.org.tw:8181/elogbookquery/content/index.xhtml"
-    # [登入邏輯與先前一致...] 
-    # 此處省略重複登入代碼，直接進入數據封裝
-    vessel_data = []
-    # 遍歷 VESSELS 並填入 catch_details [魚種, 重量, 尾數, 處理型態]
-    return vessel_data
+    # 補充 10 個港口 MGO (目前以 Brent 溢價模擬，建議每週手動微調或觀察)
+    ports = ["新加坡", "高雄", "釜山", "拉斯帕爾馬斯", "開普敦", "達卡", "阿必尚", "路易港", "維多利亞", "檳城"]
+    brent_latest = float(market_results["oil"][1]["latest"])
+    for p in ports:
+        # 簡單邏輯：MGO 約為 Brent 桶價 * 7.5 (噸換算) + 運費溢價
+        price = brent_latest * 7.5 + 150 
+        market_results["oil"].append({
+            "port": f"MGO - {p}", "latest": f"{price:.1f}", 
+            "week_h": f"{price*1.05:.1f}", "week_l": f"{price*0.95:.1f}"
+        })
+    return market_results
+
+async def scrape_ofdc(page):
+    # ... (此處保留您先前測試成功的 OFDC 登入與漁獲抓取代碼)
+    # 確保抓到 bait (餌料) 與 sea_temp (海溫)
+    return vessel_data_list # 假設回傳抓好的船隻陣列
 
 async def main():
     async with async_playwright() as p:
-        # ... 啟動瀏覽器抓取 vessel_data ...
-        v_data = await scrape_vessels(page) 
-        market = get_market_data()
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
         
-        final_output = {
+        vessels_data = []
+        try:
+            vessels_data = await scrape_ofdc(page)
+        except Exception as e: print(f"漁獲抓取失敗: {e}")
+        
+        finance_data = fetch_finance_data()
+        
+        final_json = {
             "update_time": time.strftime('%Y-%m-%d %H:%M'),
-            "vessels": v_data,
-            "market": market
+            "vessels": vessels_data,
+            "market": finance_data
         }
+        
         with open('data.json', 'w', encoding='utf-8') as f:
-            json.dump(final_output, f, ensure_ascii=False, indent=4)
+            json.dump(final_json, f, ensure_ascii=False, indent=4)
+        await browser.close()
 
-# 執行主程式
+if __name__ == "__main__":
+    asyncio.run(main())
