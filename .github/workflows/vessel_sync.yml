@@ -1,47 +1,75 @@
-name: OFDC Data Auto Scraper
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海洋哨兵 3.0 | 昱友/信隆 戰略面板</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root { --navy: #002b5e; --gold: #c5a059; --blue: #0056b3; }
+        body { margin: 0; font-family: sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        header { background: var(--navy); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; }
+        #menu-btn { background: var(--gold); border: none; padding: 8px 12px; color: white; border-radius: 4px; cursor: pointer; }
+        #main { flex: 1; display: flex; position: relative; }
+        #map { flex: 1; z-index: 1; }
+        #sidebar { 
+            position: absolute; right: 0; top: 0; bottom: 0; width: 360px; 
+            background: white; box-shadow: -2px 0 10px rgba(0,0,0,0.2); 
+            transition: 0.3s; z-index: 2000; overflow-y: auto; padding: 15px; 
+        }
+        #sidebar.collapsed { transform: translateX(100%); }
+        .m-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; }
+        .m-table th { text-align: left; border-bottom: 2px solid var(--gold); padding: 5px; }
+        .m-table td { padding: 8px 5px; border-bottom: 1px solid #eee; }
+        .val-red { color: #d32f2f; font-weight: bold; }
+        /* 漁獲明細表格格式還原 */
+        .c-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        .c-table th { background: var(--blue); color: white; border: 1px solid #ddd; padding: 6px; }
+        .c-table td { border: 1px solid #ddd; padding: 6px; text-align: center; }
+        @media (max-width: 768px) { #sidebar { width: 85%; } }
+    </style>
+</head>
+<body>
+<header><div>⚓ <b>海洋哨兵 3.0</b></div><button id="menu-btn">選單 ☰</button></header>
+<div id="main">
+    <div id="map"></div>
+    <div id="sidebar" class="collapsed">
+        <h3 style="color:var(--navy)">📊 金融週報 (一週高低)</h3>
+        <table class="m-table" id="ex-data"></table>
+        <table class="m-table" id="oil-data"></table>
+        <h3 style="color:var(--navy)">🐟 魚場分布預測圖層</h3>
+        <label><input type="checkbox" checked onchange="toggleL('b')"> 大目鮪</label>
+        <label><input type="checkbox" onchange="toggleL('y')"> 黃鰭鮪</label>
+        <h3 style="color:var(--navy)">🚢 艦隊清單</h3>
+        <div id="v-list"></div>
+    </div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map').setView([0, 160], 3);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    const lyr = { b: L.circle([5, 155], {radius: 800000, color: 'orange', fillOpacity: 0.2}).addTo(map) };
+    function toggleL(n) { map.hasLayer(lyr[n]) ? map.removeLayer(lyr[n]) : lyr[n].addTo(map); }
+    document.getElementById('menu-btn').onclick = () => document.getElementById('sidebar').classList.toggle('collapsed');
 
-on:
-  schedule:
-    - cron: '45 0 * * *' # 台灣時間 08:45 執行
-  workflow_dispatch:      # 支援手動執行
+    async function load() {
+        const res = await fetch('data.json?t=' + Date.now());
+        const d = await res.json();
+        let exH = '<tr><th>幣別</th><th>最新</th><th>週高/低</th></tr>';
+        d.market.exchange.forEach(x => exH += `<tr><td>${x.name}</td><td class="val-red">${x.latest}</td><td>H:${x.week_h}<br>L:${x.week_l}</td></tr>`);
+        document.getElementById('ex-data').innerHTML = exH;
+        let oilH = '<tr><th>港口/商品</th><th>最新</th><th>週高/低</th></tr>';
+        d.market.oil.forEach(o => oilH += `<tr><td>${o.name}</td><td class="val-red">${o.latest}</td><td>H:${o.week_h}<br>L:${o.week_l}</td></tr>`);
+        document.getElementById('oil-data').innerHTML = oilH;
 
-permissions:
-  contents: write
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 1. 檢出代碼
-        uses: actions/checkout@v4
-
-      - name: 2. 設定 Python 3.9
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: 3. 安裝組件
-        run: |
-          pip install playwright yfinance
-          playwright install chromium
-
-      - name: 4. 執行數據抓取 (漁獲 + 金融)
-        env:
-          OFDC_USER: ${{ secrets.OFDC_USER }}
-          OFDC_PASS: ${{ secrets.OFDC_PASS }}
-        run: python tracker.py
-
-      - name: 5. 同步並推送數據 (防衝突模式)
-        if: success()
-        run: |
-          git config --global user.name "Vessel-Bot"
-          git config --global user.email "bot@example.com"
-          
-          # 關鍵修復：處理未提交的變動並拉取遠端更新
-          git add data.json
-          git stash
-          git pull --rebase origin main
-          git stash pop || echo "No stash to pop"
-          
-          git add data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "自動更新報表: $(date)" && git push origin main)
+        d.vessels.forEach(v => {
+            const m = L.marker([v.lat, v.lon]).addTo(map);
+            m.bindPopup(`<div style="min-width:300px"><b>🚢 ${v.name}</b> (${v.date})<br>🌡️ 海溫: ${v.temp}°C | 🍱 餌料: ${v.bait}
+                <table class="c-table"><thead><tr><th>魚種</th><th>重量</th><th>尾數</th><th>處理</th></tr></thead>
+                <tbody>${v.catch_details.map(c => `<tr><td>${c.sp}</td><td>${c.wt}</td><td>${c.ct}</td><td>${c.pr}</td></tr>`).join('')}</tbody></table></div>`);
+        });
+    }
+    load();
+</script>
+</body>
+</html>
