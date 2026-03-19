@@ -2,7 +2,7 @@ name: OFDC Data Auto Scraper
 
 on:
   schedule:
-    - cron: '45 0 * * *' # 台灣時間 08:45
+    - cron: '45 0 * * *'
   workflow_dispatch:
 
 permissions:
@@ -15,34 +15,32 @@ jobs:
       - name: 1. 檢出代碼
         uses: actions/checkout@v4
 
-      - name: 2. 設定 Python 環境
+      - name: 2. 設定 Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
       - name: 3. 安裝組件
         run: |
-          pip install playwright yfinance
+          pip install playwright yfinance copernicusmarine netCDF4 numpy
           playwright install chromium
 
-      - name: 4. 執行數據抓取
+      - name: 4. 執行數據抓取 (漁獲 + 金融 + 水文預測)
         env:
           OFDC_USER: ${{ secrets.OFDC_USER }}
           OFDC_PASS: ${{ secrets.OFDC_PASS }}
+          COPERNICUS_USER: ${{ secrets.COPERNICUS_USER }}
+          COPERNICUS_PASS: ${{ secrets.COPERNICUS_PASS }}
         run: python tracker.py
 
-      - name: 5. 同步數據並存回倉庫 (防衝突模式)
+      - name: 5. 同步數據並存回倉庫
         if: success()
         run: |
           git config --global user.name "Vessel-Bot"
           git config --global user.email "bot@example.com"
-          
-          # 解決你遇到的 128 錯誤：先暫存本地變動，拉取後再恢復
           git add data.json
           git stash
           git pull --rebase origin main
-          git stash pop || echo "No changes to pop"
-          
-          # 再次確認添加並提交
+          git stash pop || echo "No stash to pop"
           git add data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "自動更新報表數據: $(date)" && git push origin main)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "自動更新數據: $(date)" && git push origin main)
