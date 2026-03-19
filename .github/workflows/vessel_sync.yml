@@ -1,44 +1,15 @@
-name: OFDC Data Auto Scraper
-
-on:
-  schedule:
-    - cron: '45 0 * * *'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 1. 檢出代碼
-        uses: actions/checkout@v4
-
-      - name: 2. 設定 Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: 3. 安裝組件
-        run: |
-          pip install playwright yfinance
-          playwright install chromium
-
-      - name: 4. 執行數據抓取 (漁獲 + 金融 + 水文預測)
-        env:
-          OFDC_USER: ${{ secrets.OFDC_USER }}
-          OFDC_PASS: ${{ secrets.OFDC_PASS }}
-        run: python tracker.py
-
-      - name: 5. 同步數據並存回倉庫 (防衝突模式)
+- name: 5. 同步並推送數據 (強制覆蓋衝突模式)
         if: success()
         run: |
           git config --global user.name "Vessel-Bot"
           git config --global user.email "bot@example.com"
+          
+          # 1. 先將目前的 data.json 暫存
           git add data.json
-          git stash
-          git pull --rebase origin main
-          git stash pop || echo "No stash to pop"
-          git add data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "更新數據報表: $(date)" && git push origin main)
+          git commit -m "暫存最新漁獲數據"
+          
+          # 2. 拉取遠端更新，若有衝突，強制以機器人的 data.json 為準
+          git pull --rebase -X theirs origin main
+          
+          # 3. 推送回 GitHub
+          git push origin main
