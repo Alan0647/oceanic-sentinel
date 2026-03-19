@@ -9,21 +9,20 @@ VESSELS = [
 ]
 
 def fetch_market_data():
-    symbols = {
-        "USD/TWD": "TWD=X", "USD/JPY": "JPY=X", "JPY/TWD": "JPYTWD=X",
-        "WTI 輕原油": "CL=F", "布蘭特原油": "BZ=F"
-    }
+    symbols = {"USD/TWD": "TWD=X", "USD/JPY": "JPY=X", "JPY/TWD": "JPYTWD=X", "WTI 輕原油": "CL=F", "布蘭特原油": "BZ=F"}
     res = {"exchange": [], "oil": []}
     for name, sym in symbols.items():
         try:
             h = yf.Ticker(sym).history(period="10d")
             latest, wh, wl = h['Close'].iloc[-1], h['High'].tail(7).max(), h['Low'].tail(7).min()
-            item = {"name": name, "latest": f"{latest:.2f}", "week_h": f"{wh:.2f}", "week_l": f"{wl:.2f}"}
+            # 針對 JPY/TWD 進行四位小數處理
+            prec = 4 if "JPY/TWD" in name else 2
+            item = {"name": name, "latest": f"{latest:.{prec}f}", "week_h": f"{wh:.{prec}f}", "week_l": f"{wl:.{prec}f}"}
             if "/" in name: res["exchange"].append(item)
             else: res["oil"].append(item)
         except: pass
     
-    # 港口 MGO 11 個點位
+    # 港口 MGO
     brent = float(res["oil"][1]["latest"]) if len(res["oil"]) > 1 else 85.0
     ports = ["新加坡", "高雄", "釜山", "拉斯帕爾馬斯", "開普敦", "達卡", "阿必尚", "路易港", "維多利亞", "檳城"]
     for p in ports:
@@ -41,11 +40,11 @@ async def scrape_ofdc(page):
     await page.click("text=鮪延繩釣")
 
     start_date = (datetime.now() - timedelta(days=7)).strftime("%Y/%m/%d")
-    vessels_results = []
+    results = []
 
     for v in VESSELS:
         try:
-            print(f"🚢 執行中：{v['name']}")
+            print(f"🚢 執行：{v['name']}")
             await page.select_option('select[id="toolForm:ctnoSelectMenu"]', v['id'])
             d_ins = await page.locator('input[id*="Date"]').all()
             if len(d_ins) >= 2: await d_ins[0].fill(start_date)
@@ -55,33 +54,25 @@ async def scrape_ofdc(page):
             rows = await page.locator("tr.ui-widget-content").all()
             if rows:
                 cells = await rows[0].locator("td").all_inner_texts()
-                # 總漁獲量通常在第 11 欄或小計列
                 data = {
                     "name": v['name'], "id": v['id'], "date": cells[2],
                     "lat": float(cells[4]), "lon": float(cells[5]),
                     "temp": cells[6], "bait": cells[16], "total_weight": cells[11],
                     "catch_details": []
                 }
-                # 點擊以獲取明細
+                # 點擊以獲取明細 (綠框)
                 await rows[0].click()
                 await asyncio.sleep(3)
+                # 這裡修正抓取邏輯，對標官方欄位 [統一編號, 作業日期, 魚種, 重量, 尾數, 處理型態]
                 c_rows = await page.locator(".ui-datatable-data").nth(1).locator("tr").all()
+                total_w = 0.0
+                total_c = 0
                 for cr in c_rows:
                     cc = await cr.locator("td").all_inner_texts()
                     if len(cc) >= 6:
-                        data["catch_details"].append({"sp": cc[2], "wt": cc[3], "ct": cc[4], "pr": cc[5]})
-                vessels_results.append(data)
-        except: continue
-    return vessels_results
-
-async def main():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
-        v_data = await scrape_ofdc(page)
-        m_data = fetch_market_data()
-        with open('data.json', 'w', encoding='utf-8') as f:
-            json.dump({"update_time": time.strftime('%Y-%m-%d %H:%M'), "vessels": v_data, "market": m_data}, f, ensure_ascii=False, indent=4)
-        await browser.close()
-
-if __name__ == "__main__": asyncio.run(main())
+                        data["catch_details"].append({
+                            "id": cc[1], "date": cc[2], "sp": cc[3], "wt": cc[4], "ct": cc[5], "pr": cc[6]
+                        })
+                        try: total_w += float(cc[4])
+                        except: pass
+                        try:
