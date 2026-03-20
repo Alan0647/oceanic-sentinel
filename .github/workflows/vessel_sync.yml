@@ -2,8 +2,8 @@ name: OFDC Data Auto Scraper
 
 on:
   schedule:
-    - cron: '45 0 * * *' # 台北時間每日 08:45 執行
-  workflow_dispatch:      # 支援手動執行
+    - cron: '45 0 * * *' # 台北 08:45 執行
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: 3. 安裝必要組件
+      - name: 3. 安裝組件
         run: |
           pip install playwright yfinance pytz
           playwright install chromium
@@ -32,12 +32,12 @@ jobs:
           TZ: 'Asia/Taipei'
         run: python tracker.py
 
-      - name: 5. 強制同步數據回倉庫
+      - name: 5. 同步數據回倉庫
         if: success()
         run: |
           git config --global user.name "Vessel-Bot"
           git config --global user.email "bot@example.com"
           git add data.json
-          git commit -m "🚀 戰略中心數據更新: $(date)" || echo "No changes"
+          git commit -m "🚀 BunkerIndex 實戰報價更新: $(date)" || echo "No changes"
           git pull --rebase -X theirs origin main
           git push origin main
