@@ -1,5 +1,5 @@
 {
-    "update_time": "2026-03-20 17:45",
+    "update_time": "2026-03-20 17:54",
     "vessels": [
         {
             "name": "信隆168",
@@ -88,13 +88,13 @@
         "exchange": [
             {
                 "name": "USD/TWD",
-                "latest": "31.94",
+                "latest": "31.97",
                 "week_h": "32.12",
                 "week_l": "31.73"
             },
             {
                 "name": "USD/JPY",
-                "latest": "159.79",
+                "latest": "158.79",
                 "week_h": "159.82",
                 "week_l": "157.87"
             },
