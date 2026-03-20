@@ -81,4 +81,54 @@ async def scrape_ofdc(page):
             print(f"🚢 同步：{v['name']}")
             await page.select_option('select[id*="ctnoSelectMenu"]', v['id'])
             d_ins = await page.locator('input[id*="Date_input"]').all()
-            if len(d_
+            if len(d_ins) >= 2:
+                await d_ins[0].fill(start_date)
+                await d_ins[1].fill(end_date)
+            await page.get_by_role("button", name="線上查詢").click()
+            await asyncio.sleep(6)
+
+            rows = await page.locator("tr.ui-widget-content").all()
+            if rows:
+                target_row, max_date = rows[0], ""
+                for r in rows:
+                    cells = await r.locator("td").all_inner_texts()
+                    if len(cells) > 2 and cells[2] > max_date:
+                        max_date, target_row = cells[2], r
+                
+                cells = await target_row.locator("td").all_inner_texts()
+                v_data = {"name": v['name'], "id": v['id'], "date": cells[2], "lat": float(cells[4]), "lon": float(cells[5]), "temp": cells[6], "bait": cells[16], "catch_details": []}
+                await target_row.click()
+                await asyncio.sleep(4)
+                c_rows = await page.locator(".ui-datatable-data").nth(1).locator("tr").all()
+                tw, tc = 0.0, 0
+                for cr in c_rows:
+                    cc = await cr.locator("td").all_inner_texts()
+                    if len(cc) >= 7:
+                        v_data["catch_details"].append({"id": cc[1], "date": cc[2], "sp": cc[3], "wt": cc[4], "ct": cc[5], "pr": cc[6]})
+                        try: tw += float(cc[4]); tc += int(cc[5])
+                        except: pass
+                v_data["subtotal_weight"], v_data["subtotal_count"] = f"{tw:.1f}", tc
+                results.append(v_data)
+        except: continue
+    return results
+
+async def main():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        v_info = await scrape_ofdc(page)
+        analysis = await fetch_integr8_analysis(page)
+        oil_info = await fetch_bunker_index(page)
+        fx_info = fetch_fx()
+        
+        output = {
+            "update_time": datetime.now(TW_TIME).strftime('%Y-%m-%d %H:%M'),
+            "vessels": v_info,
+            "market": {"exchange": fx_info, "oil": oil_info, "analysis": analysis}
+        }
+        with open('data.json', 'w', encoding='utf-8') as f:
+            json.dump(output, f, ensure_ascii=False, indent=4)
+        await browser.close()
+
+if __name__ == "__main__":
+    asyncio.run(main())
