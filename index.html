@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>海洋哨兵 11.0 | 昱友戰略指揮部</title>
+    <title>海洋哨兵 12.0 | 戰略指揮面板</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root { --navy: #001f3f; --gold: #d4af37; --blue: #007bff; }
         body { margin: 0; font-family: -apple-system, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; background: #000; }
-        header { background: var(--navy); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        header { background: var(--navy); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 3000; }
         #menu-btn { background: var(--gold); border: none; padding: 8px 12px; color: #fff; border-radius: 4px; cursor: pointer; font-weight: bold; }
         #main { flex: 1; display: flex; position: relative; overflow: hidden; }
         #map { flex: 1; z-index: 1; }
@@ -28,7 +28,7 @@
     </style>
 </head>
 <body>
-<header><div>⚓ <b>海洋哨兵 11.0</b> | 昱友戰略指揮部</div><button id="menu-btn">戰略情報 ☰</button></header>
+<header><div>⚓ <b>海洋哨兵 12.0</b> | 昱友戰略指揮部</div><button id="menu-btn">戰略情報 ☰</button></header>
 <div id="main">
     <div id="map"></div>
     <div id="sidebar">
@@ -37,7 +37,7 @@
         <div class="section-header">💱 即時匯率</div>
         <table class="m-table" id="ex-table"></table>
         <div class="section-header">⛽ BunkerIndex 全球燃油</div>
-        <div id="oil-list"></div>
+        <table class="m-table" id="oil-table"></table>
         <div class="section-header">💡 Integr8 專家解析</div>
         <div id="oil-analysis" class="analysis-box"></div>
     </div>
@@ -49,29 +49,38 @@
     const sidebar = document.getElementById('sidebar');
     if (window.innerWidth <= 768) sidebar.classList.add('collapsed');
     document.getElementById('menu-btn').onclick = () => sidebar.classList.toggle('collapsed');
+
     const createVIcon = (n) => L.divIcon({ className: 'v-icon', html: `<div style="background:var(--blue); border:2px solid white; border-radius:50%; width:12px; height:12px; box-shadow: 0 0 10px var(--blue);"></div><div style="color:white; font-size:10px; font-weight:bold; margin-top:2px; text-shadow: 1px 1px 2px black;">${n}</div>`, iconSize: [40, 40], iconAnchor: [20, 20] });
-    const oilIcon = L.icon({ iconUrl: 'https://cdn-icons-png.flaticon.com/512/3551/3551525.png', iconSize: [18, 18] });
+    const oilIcon = L.icon({ iconUrl: 'https://cdn-icons-png.flaticon.com/512/3551/3551525.png', iconSize: [22, 22] });
+
     async function load() {
         const res = await fetch('data.json?t=' + Date.now());
         const d = await res.json();
         document.getElementById('oil-analysis').innerText = d.market.analysis;
+        
+        // 匯率
         let exH = '<tr><th>幣別</th><th>最新</th><th>週高</th><th>週低</th></tr>';
         d.market.exchange.forEach(x => exH += `<tr><td><b>${x.name}</b></td><td class="val-red">${x.latest}</td><td>${x.week_h}</td><td>${x.week_l}</td></tr>`);
         document.getElementById('ex-table').innerHTML = exH;
+
+        // 油價
+        let oilH = '<tr><th>港口</th><th>最新(MGO)</th><th>週高</th><th>週低</th></tr>';
         d.market.oil.forEach(o => {
-            if (o.lat !== 0) L.marker([o.lat, o.lon], { icon: oilIcon }).addTo(map).bindPopup(`<b>⛽ ${o.name}</b><br>MGO: <b style="color:red">$${o.latest}</b><br>Date: ${o.date}`);
-            const card = document.createElement('div');
-            card.className = 'v-card'; card.innerHTML = `<small>${o.date}</small><br><b>${o.name.split('(')[0]}</b> <span style="float:right;color:#d32f2f">$${o.latest}</span>`;
-            card.onclick = () => { if(o.lat !== 0) map.setView([o.lat, o.lon], 7); };
-            document.getElementById('oil-list').appendChild(card);
+            oilH += `<tr><td>${o.name}</td><td class="val-red">${o.latest}</td><td>${o.week_h}</td><td>${o.week_l}</td></tr>`;
+            if (o.lat !== 0) {
+                L.marker([o.lat, o.lon], { icon: oilIcon }).addTo(map).bindPopup(`<b>⛽ ${o.name}</b><br>MGO: <b style="color:red">$${o.latest}</b><br>Date: ${o.date}`);
+            }
         });
+        document.getElementById('oil-table').innerHTML = oilH;
+
+        // 艦隊
         d.vessels.forEach(v => {
             const m = L.marker([v.lat, v.lon], { icon: createVIcon(v.name) }).addTo(map);
             const popup = `<div style="min-width:440px"><b style="color:var(--navy);font-size:15px;">🚢 ${v.name}</b> (${v.date})<br>🌡️ 海溫: ${v.temp}°C | 🍱 餌料: ${v.bait} | 📍 ${v.lat}, ${v.lon}<div class="table-scroll"><table class="c-table"><thead><tr><th>統一編號</th><th>日期</th><th>魚種</th><th>重量</th><th>尾數</th><th>處理</th></tr></thead><tbody>${v.catch_details.map(c => `<tr><td>${c.id}</td><td>${c.date}</td><td>${c.sp}</td><td>${c.wt}</td><td>${c.ct}</td><td>${c.pr}</td></tr>`).join('')}<tr style="background:#f9f9f9;font-weight:bold"><td colspan="3" style="text-align:right">小計：</td><td>${v.subtotal_weight}</td><td>${v.subtotal_count}</td><td></td></tr></tbody></table></div></div>`;
             m.bindPopup(popup, { maxWidth: 500 });
             const card = document.createElement('div');
             card.className = 'v-card';
-            card.innerHTML = `<b>${v.name}</b> <span style="float:right;color:var(--blue)">${v.subtotal_weight} kg</span><br><small>📅 ${v.date} | ⚓ ${v.lat}, ${v.lon}</small>`;
+            card.innerHTML = `<b>${v.name}</b> <span style="float:right;color:var(--blue)">${v.subtotal_weight} kg</span><br><small>📅 ${v.date}</small>`;
             card.onclick = () => { map.setView([v.lat, v.lon], 7); m.openPopup(); };
             document.getElementById('v-list').appendChild(card);
             if (v.id === "61508") { map.setView([v.lat, v.lon], 6); m.openPopup(); }
