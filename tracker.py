@@ -44,8 +44,7 @@ async def fetch_bunker_data(page):
                     "latest": cells[2].replace("$", "").strip(),
                     "date": cells[3].strip(), "lat": coords[0], "lon": coords[1]
                 })
-    except Exception as e:
-        print(f"⚠️ BunkerIndex 抓取中斷: {e}")
+    except: pass
     return bunker_results
 
 def fetch_fx_data():
@@ -74,7 +73,7 @@ async def scrape_ofdc(page):
     final_vessels = []
     for v in VESSELS:
         try:
-            print(f"🚢 同步：{v['name']}")
+            print(f"🚢 同步中：{v['name']}")
             await page.select_option('select[id*="ctnoSelectMenu"]', v['id'])
             d_ins = await page.locator('input[id*="Date_input"]').all()
             if len(d_ins) >= 2:
