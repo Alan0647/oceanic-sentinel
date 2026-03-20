@@ -2,7 +2,7 @@ name: OFDC Data Auto Scraper
 
 on:
   schedule:
-    - cron: '45 0 * * *' # 每日 UTC 00:45 (台北 08:45)
+    - cron: '45 0 * * *'
   workflow_dispatch:
 
 permissions:
@@ -25,19 +25,19 @@ jobs:
           pip install playwright yfinance pytz
           playwright install chromium
 
-      - name: 4. 執行全方位數據抓取
+      - name: 4. 執行數據抓取
         env:
           OFDC_USER: ${{ secrets.OFDC_USER }}
           OFDC_PASS: ${{ secrets.OFDC_PASS }}
-          TZ: 'Asia/Taipei' # 設定執行環境時區
+          TZ: 'Asia/Taipei'
         run: python tracker.py
 
-      - name: 5. 推送最新數據回倉庫
+      - name: 5. 推送數據回倉庫
         if: success()
         run: |
           git config --global user.name "Vessel-Bot"
           git config --global user.email "bot@example.com"
           git add data.json
-          git commit -m "🚀 網路時間校正更新: $(date)" || echo "No changes"
+          git commit -m "🚀 戰略中心全數據更新: $(date)" || echo "No changes"
           git pull --rebase -X theirs origin main
           git push origin main
