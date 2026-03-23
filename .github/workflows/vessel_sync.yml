@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+# 加入全域環境變數，解決 Node.js 20 棄用問題
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,24 +24,24 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: 3. 安裝組件
+      - name: 3. 安裝必要組件
         run: |
           pip install playwright yfinance pytz
           playwright install chromium
 
-      - name: 4. 執行全情資抓取
+      - name: 4. 執行全方位數據抓取 (漁獲+BI油價+Integr8)
         env:
           OFDC_USER: ${{ secrets.OFDC_USER }}
           OFDC_PASS: ${{ secrets.OFDC_PASS }}
           TZ: 'Asia/Taipei'
         run: python tracker.py
 
-      - name: 5. 同步數據回倉庫
+      - name: 5. 強制同步數據回倉庫
         if: success()
         run: |
           git config --global user.name "Vessel-Bot"
           git config --global user.email "bot@example.com"
           git add data.json
-          git commit -m "🚀 BunkerIndex 實戰報價更新: $(date)" || echo "No changes"
+          git commit -m "🚀 系統兼容性升級 & 數據更新: $(date)" || echo "No changes"
           git pull --rebase -X theirs origin main
           git push origin main
